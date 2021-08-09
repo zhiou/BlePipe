@@ -20,7 +20,7 @@ public struct BPDiscovery {
 }
 
 extension BPDiscovery: Nameable {
-    var displayName: String {
+    public var displayName: String {
         return advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? remote.name ?? "Unkown Name"
     }
 }

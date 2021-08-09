@@ -5,11 +5,7 @@ public typealias BPCompletionClosure = (BPError?) -> Void
 
 public class BPScanner {
 
-    private var cm: CBCentralManager {
-        get {
-            return CBCentralManager(delegate: delegateProxy, queue: nil, options: nil)
-        }
-    }
+    private lazy var  cm: CBCentralManager = CBCentralManager(delegate: delegateProxy, queue: nil, options: nil)
     
     private let delegateProxy: BPCentralManagerDelegateProxy = BPCentralManagerDelegateProxy()
     
@@ -39,7 +35,7 @@ public class BPScanner {
     
     public var completionClosure: BPCompletionClosure?
     
-    init() {
+    public init() {
         delegateProxy.stateClosure = { [unowned self] state in
             switch state {
             case .poweredOn:
@@ -50,34 +46,17 @@ public class BPScanner {
         }
     }
     
-    
-    //TODO: may be stuck in main thread
-    static func scan(for displayName: String, in seconds: Int) -> BPDiscovery? {
-        let scanner = BPScanner()
-        var result: BPDiscovery? = nil
-        let sem = DispatchSemaphore(value: 0)
-        scanner.filterClosure = {
-            return $0.displayName == displayName
-        }
-        scanner.discoverClosure = { discovery in
-            result = discovery
-            sem.signal()
-        }
-        scanner.completionClosure = { error in
-            sem.signal()
-        }
-        scanner.startWith(duration: TimeInterval(seconds))
-        
-        sem.wait()
-        return result
+    deinit {
+        print("deinit")
     }
     
-    func start() {
+    
+    public func start() {
         startWith(duration: 0)
     }
     
     
-    func startWith(duration: TimeInterval) {
+    public func startWith(duration: TimeInterval) {
         if cm.isScanning {
             return
         }
@@ -90,19 +69,18 @@ public class BPScanner {
             return
         }
         
-        var options: [String: Any]? = nil
-        if let allowDuplicates = configuration?.allowDuplicates {
-            options = [CBCentralManagerScanOptionAllowDuplicatesKey: allowDuplicates]
-        }
+        let allowDuplicates = NSNumber(booleanLiteral: configuration?.allowDuplicates ?? false)
+        let options = [CBCentralManagerScanOptionAllowDuplicatesKey: allowDuplicates]
+        
         cm.scanForPeripherals(withServices: configuration?.serviceUUIDs, options: options)
         if duration > 0 {
-            timer = Timer.scheduledTimer(withTimeInterval: duration, repeats: false, block: { [unowned self] timer in
-                self.endScan(.timeout)
+            timer = Timer.scheduledTimer(withTimeInterval: duration, repeats: false, block: { [weak self] timer in
+                self?.endScan(.timeout)
             })
         }
     }
     
-    func stop() {
+    public func stop() {
        endScan(nil)
     }
     
