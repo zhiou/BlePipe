@@ -23,7 +23,11 @@ public class BPConnection {
         self.completion = completion
     }
     
-    public func run() {
+    public func start() {
         cm.connect(peripheral, options: nil)
+    }
+    
+    public func stop() {
+        cm.cancelPeripheralConnection(peripheral)
     }
 }

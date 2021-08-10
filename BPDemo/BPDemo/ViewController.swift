@@ -30,7 +30,7 @@ class ViewController: UIViewController {
         
         bp.discoverClosure = { [weak self] discovery in
             print("1 --- :" + discovery.displayName)
-            self?.central.connect(peripheral: discovery.remote) { remotePeripheral, error in
+            self?.central.connect(discovery.remote) { remotePeripheral, error in
                 print(remotePeripheral)
                 print(error)
             }

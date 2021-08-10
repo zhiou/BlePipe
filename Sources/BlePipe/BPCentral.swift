@@ -20,20 +20,22 @@ public class BPCentral {
     
     
     public init() {
-        delegateProxy.connectClosure = { [weak self] peripheral, error in
+        delegateProxy.connectionClosure = { [weak self] peripheral, error in
             guard let c = self?.connections.filter({$0.peripheral.identifier == peripheral.identifier}).first else{
                 return
             }
             if let error = error {
                 c.completion(nil, error)
+                if let index = self?.connections.firstIndex(where: { $0.peripheral.identifier == c.peripheral.identifier }) {
+                    self?.connections.remove(at: index)
+                }
             } else {
                 c.completion(BPRemotePeripheral(peripheral: peripheral), nil)
             }
-            
         }
     }
     
-    public func connect(peripheral: CBPeripheral, completion: @escaping BPConnectCompletion) {
+    public func connect(_ peripheral: CBPeripheral, completion: @escaping BPConnectCompletion) {
         if let c = connections.filter({$0.peripheral.identifier == peripheral.identifier}).first {
             let error: BPError = c.peripheral.state == .connected ? .alreadyConnected : .alreadyConnecting
             completion(nil, error)
@@ -46,7 +48,19 @@ public class BPCentral {
         }
         let connection = BPConnection(cm: cm, peripheral: target, completion: completion)
         connections.append(connection)
-        connection.run()
+        connection.start()
+    }
+    
+    public func disconnect(_ peripheral: CBPeripheral, completion: @escaping BPConnectCompletion) {
+        guard peripheral.state == .connected else {
+            completion(nil, .alreadyDisconnected)
+            return
+        }
+        guard let c = connections.filter({$0.peripheral.identifier == peripheral.identifier}).first else {
+            completion(nil, .notFound)
+            return
+        }
+        c.stop()
     }
     
     

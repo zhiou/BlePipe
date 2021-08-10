@@ -12,5 +12,7 @@ public enum BPError: Error {
     case notFound
     case alreadyConnected
     case alreadyConnecting
+    case alreadyDisconnected
     case sysError(Error?)
+    case disconnect(Error?)
 }
