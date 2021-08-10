@@ -13,11 +13,14 @@ public typealias BPFilterClosure = (BPDiscovery) -> Bool
 
 public typealias BPStateClosure = (CBManagerState) -> Void
 
+public typealias BPConnectClosure = (CBPeripheral, BPError?) -> Void
+
 class BPCentralManagerDelegateProxy: NSObject, CBCentralManagerDelegate {
     
     public var discoverdClosure: BPDiscoveredClosure?
     public var filterClosure: BPFilterClosure?
     public var stateClosure: BPStateClosure?
+    public var connectClosure: BPConnectClosure?
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         stateClosure?(central.state)
@@ -29,6 +32,18 @@ class BPCentralManagerDelegateProxy: NSObject, CBCentralManagerDelegate {
             return
         }
         discoverdClosure?(discovery)
+    }
+    
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        connectClosure?(peripheral, nil)
+    }
+    
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        connectClosure?(peripheral, .sysError(error))
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+  
     }
     
 }

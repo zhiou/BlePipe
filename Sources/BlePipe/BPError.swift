@@ -9,4 +9,8 @@ import Foundation
 
 public enum BPError: Error {
     case timeout
+    case notFound
+    case alreadyConnected
+    case alreadyConnecting
+    case sysError(Error?)
 }

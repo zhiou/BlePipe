@@ -12,11 +12,11 @@ protocol Nameable {
 }
 
 public struct BPDiscovery {
-    let remote: CBPeripheral
+    public let remote: CBPeripheral
     
-    let advertisementData: [String: Any]
+    public let advertisementData: [String: Any]
     
-    let rssi: Int
+    public let rssi: Int
 }
 
 extension BPDiscovery: Nameable {

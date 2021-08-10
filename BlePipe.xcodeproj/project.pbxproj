@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9F3EE6C426C229930087282E /* BPCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3EE6C326C229930087282E /* BPCentral.swift */; };
+		9F3EE6C726C22B550087282E /* BPRemotePeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3EE6C626C22B550087282E /* BPRemotePeripheral.swift */; };
+		9F3EE6C926C2512C0087282E /* BPConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3EE6C826C2512C0087282E /* BPConnection.swift */; };
 		OBJ_28 /* BPCentralManagerDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* BPCentralManagerDelegateProxy.swift */; };
 		OBJ_29 /* BPConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* BPConfiguration.swift */; };
 		OBJ_30 /* BPDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* BPDiscovery.swift */; };
@@ -15,6 +18,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9F3EE6C326C229930087282E /* BPCentral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPCentral.swift; sourceTree = "<group>"; };
+		9F3EE6C626C22B550087282E /* BPRemotePeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPRemotePeripheral.swift; sourceTree = "<group>"; };
+		9F3EE6C826C2512C0087282E /* BPConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPConnection.swift; sourceTree = "<group>"; };
 		"BlePipe::BlePipe::Product" /* BlePipe.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BlePipe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_10 /* BPConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPConfiguration.swift; sourceTree = "<group>"; };
 		OBJ_11 /* BPDiscovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPDiscovery.swift; sourceTree = "<group>"; };
@@ -45,7 +51,7 @@
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -54,7 +60,6 @@
 				OBJ_21 /* LICENSE */,
 				OBJ_22 /* README.md */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_7 /* Sources */ = {
@@ -73,6 +78,9 @@
 				OBJ_11 /* BPDiscovery.swift */,
 				OBJ_12 /* BPError.swift */,
 				OBJ_13 /* BPScanner.swift */,
+				9F3EE6C326C229930087282E /* BPCentral.swift */,
+				9F3EE6C626C22B550087282E /* BPRemotePeripheral.swift */,
+				9F3EE6C826C2512C0087282E /* BPConnection.swift */,
 			);
 			name = BlePipe;
 			path = Sources/BlePipe;
@@ -113,7 +121,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_17 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -129,10 +137,13 @@
 			buildActionMask = 0;
 			files = (
 				OBJ_28 /* BPCentralManagerDelegateProxy.swift in Sources */,
+				9F3EE6C726C22B550087282E /* BPRemotePeripheral.swift in Sources */,
+				9F3EE6C426C229930087282E /* BPCentral.swift in Sources */,
 				OBJ_29 /* BPConfiguration.swift in Sources */,
 				OBJ_30 /* BPDiscovery.swift in Sources */,
 				OBJ_31 /* BPError.swift in Sources */,
 				OBJ_32 /* BPScanner.swift in Sources */,
+				9F3EE6C926C2512C0087282E /* BPConnection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

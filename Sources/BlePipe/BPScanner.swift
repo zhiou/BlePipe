@@ -69,8 +69,10 @@ public class BPScanner {
             return
         }
         
-        let allowDuplicates = NSNumber(booleanLiteral: configuration?.allowDuplicates ?? false)
-        let options = [CBCentralManagerScanOptionAllowDuplicatesKey: allowDuplicates]
+        var options: [String: Any]? = nil
+        if let allowDuplicates = configuration?.allowDuplicates {
+            options = [CBCentralManagerScanOptionAllowDuplicatesKey: allowDuplicates]
+        }
         
         cm.scanForPeripherals(withServices: configuration?.serviceUUIDs, options: options)
         if duration > 0 {
