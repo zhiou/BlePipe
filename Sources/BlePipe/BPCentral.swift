@@ -18,6 +18,8 @@ public class BPCentral {
     
     private var connections: [BPConnection] = []
     
+    private let syncQueue = DispatchQueue(label: "com.zzstudio.bp.sync")
+    
     
     public init() {
         delegateProxy.connectionClosure = { [weak self] peripheral, error in
@@ -27,7 +29,9 @@ public class BPCentral {
             if let error = error {
                 c.completion(nil, error)
                 if let index = self?.connections.firstIndex(where: { $0.peripheral.identifier == c.peripheral.identifier }) {
-                    self?.connections.remove(at: index)
+                    self?.syncQueue.async { [weak self] in
+                        self?.connections.remove(at: index)
+                    }
                 }
             } else {
                 c.completion(BPRemotePeripheral(peripheral: peripheral), nil)
@@ -37,8 +41,9 @@ public class BPCentral {
     
     public func connect(_ peripheral: CBPeripheral, completion: @escaping BPConnectCompletion) {
         if let c = connections.filter({$0.peripheral.identifier == peripheral.identifier}).first {
-            let error: BPError = c.peripheral.state == .connected ? .alreadyConnected : .alreadyConnecting
-            completion(nil, error)
+                let error: BPError = c.peripheral.state == .connected ? .alreadyConnected : .alreadyConnecting
+                completion(nil, error)
+            return
         }
 
         let peripherals = self.cm.retrievePeripherals(withIdentifiers: [peripheral.identifier])
@@ -47,17 +52,20 @@ public class BPCentral {
             return
         }
         let connection = BPConnection(cm: cm, peripheral: target, completion: completion)
-        connections.append(connection)
+        syncQueue.async { [weak self] in
+            self?.connections.append(connection)
+        }
         connection.start()
     }
     
     public func disconnect(_ peripheral: CBPeripheral, completion: @escaping BPConnectCompletion) {
-        guard peripheral.state == .connected else {
-            completion(nil, .alreadyDisconnected)
-            return
-        }
         guard let c = connections.filter({$0.peripheral.identifier == peripheral.identifier}).first else {
             completion(nil, .notFound)
+            return
+        }
+        
+        guard c.peripheral.state == .connected || c.peripheral.state == .connecting else {
+            completion(nil, .alreadyDisconnected)
             return
         }
         c.stop()

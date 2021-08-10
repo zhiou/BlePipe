@@ -17,6 +17,10 @@ public class BPConnection {
     
     public let completion: BPConnectCompletion
     
+    public var isConnected: Bool {
+        return peripheral.state == .connected
+    }
+    
     init(cm: CBCentralManager, peripheral: CBPeripheral, completion: @escaping BPConnectCompletion) {
         self.cm = cm
         self.peripheral = peripheral
