@@ -34,7 +34,14 @@ public class BPCentral {
                     }
                 }
             } else {
-                c.completion(BPRemotePeripheral(peripheral: peripheral), nil)
+                let remotePeripheral = BPRemotePeripheral(peripheral: peripheral)
+                remotePeripheral.buildPipes { pe, err in
+                    if let err = err {
+                        c.completion(nil, err)
+                        return
+                    }
+                    c.completion(remotePeripheral, nil)
+                }
             }
         }
     }

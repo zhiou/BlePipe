@@ -7,7 +7,8 @@
 
 import CoreBluetooth
 
-struct BPConfiguration {
+public struct BPConfiguration {
     var serviceUUIDs: [CBUUID]
     var allowDuplicates: Bool
+    var pipeEndUUIDs: [CBUUID]
 }
