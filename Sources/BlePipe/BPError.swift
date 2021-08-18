@@ -14,5 +14,5 @@ public enum BPError: Error {
     case alreadyConnecting
     case alreadyDisconnected
     case sysError(Error?)
-    case disconnect(Error?)
+    case noPipeEnd
 }

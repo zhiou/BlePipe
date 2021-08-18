@@ -8,6 +8,7 @@
 import CoreBluetooth
 
 public typealias BPPipeEndClosure = (BPPipeEnd?, BPError?) -> Void
+public typealias BPBuildPipeCompletion = () -> Void
 public typealias BPWriteCompletion = (BPError?) -> Void
 
 public class BPRemotePeripheral {
@@ -26,7 +27,11 @@ public class BPRemotePeripheral {
         self.configuration = nil
     }
     
-    public func buildPipes(closure: @escaping BPPipeEndClosure) {
+    public func buildPipes(closure: @escaping BPPipeEndClosure, completion: @escaping BPBuildPipeCompletion) {
+        self.peripheral.delegate = delegateProxy
+        delegateProxy.discovereCharacteristicCompletion = {
+            completion()
+        }
         delegateProxy.discoverdCharacteristicsClosure = { [weak self] characteristics, err in
             if let err = err {
                 closure(nil, .sysError(err))
@@ -69,4 +74,10 @@ public class BPRemotePeripheral {
         delegateProxy.dataReceivedClosures[characteristic.uuid] = nil
     }
 
+}
+
+extension BPRemotePeripheral: Equatable {
+    public static func == (lhs: BPRemotePeripheral, rhs: BPRemotePeripheral) -> Bool {
+        return lhs.peripheral.identifier == rhs.peripheral.identifier
+    }
 }

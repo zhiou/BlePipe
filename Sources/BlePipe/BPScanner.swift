@@ -1,7 +1,7 @@
 import CoreBluetooth
 
-
-public typealias BPCompletionClosure = (BPError?) -> Void
+public typealias BPWillStartScanClosure = () -> Void
+public typealias BPDidStopScanClosure = (BPError?) -> Void
 
 public class BPScanner {
 
@@ -33,7 +33,8 @@ public class BPScanner {
         }
     }
     
-    public var completionClosure: BPCompletionClosure?
+    public var didStop: BPDidStopScanClosure?
+    public var willStart: BPWillStartScanClosure?
     
     public init() {
         delegateProxy.stateClosure = { [unowned self] state in
@@ -73,7 +74,7 @@ public class BPScanner {
         if let allowDuplicates = configuration?.allowDuplicates {
             options = [CBCentralManagerScanOptionAllowDuplicatesKey: allowDuplicates]
         }
-        
+        willStart?()
         cm.scanForPeripherals(withServices: configuration?.serviceUUIDs, options: options)
         if duration > 0 {
             timer = Timer.scheduledTimer(withTimeInterval: duration, repeats: false, block: { [weak self] timer in
@@ -90,6 +91,6 @@ public class BPScanner {
         self.timer?.invalidate()
         self.timer = nil
         self.cm.stopScan()
-        self.completionClosure?(error)
+        self.didStop?(error)
     }
 }

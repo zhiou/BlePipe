@@ -10,8 +10,6 @@ import CoreBluetooth
 
 public class BPCentral {
     
-    private let scanner = BPScanner()
-    
     private let delegateProxy = BPCentralManagerDelegateProxy()
     
     private lazy var cm = CBCentralManager(delegate: delegateProxy, queue: nil, options: nil)
@@ -20,6 +18,7 @@ public class BPCentral {
     
     private let syncQueue = DispatchQueue(label: "com.zzstudio.bp.sync")
     
+    private var pipes: [UUID: BPPipeEnd] = [:]
     
     public init() {
         delegateProxy.connectionClosure = { [weak self] peripheral, error in
@@ -33,36 +32,67 @@ public class BPCentral {
                         self?.connections.remove(at: index)
                     }
                 }
-            } else {
-                let remotePeripheral = BPRemotePeripheral(peripheral: peripheral)
-                remotePeripheral.buildPipes { pe, err in
-                    if let err = err {
-                        c.completion(nil, err)
-                        return
-                    }
-                    c.completion(remotePeripheral, nil)
-                }
+            }
+            switch peripheral.state {
+            case .connected:
+                self?.onConnected(peripheral, completion: c.completion)
+            case .disconnected:
+                self?.onDisconnected(peripheral, completion: c.completion)
+            default:
+                print(peripheral.state)
             }
         }
     }
     
+    private func onConnected(_ peripheral: CBPeripheral, completion: @escaping BPConnectCompletion) {
+        let remotePeripheral = BPRemotePeripheral(peripheral: peripheral)
+        remotePeripheral.buildPipes { [weak self] pe, err in
+            if let err = err {
+                self?.cm.cancelPeripheralConnection(peripheral)
+                completion(nil, err)
+                return
+            }
+            if let pe = pe {
+                self?.pipes[peripheral.identifier] = pe
+                completion(remotePeripheral, nil)
+            } else {
+                
+            }
+        } completion: { [weak self] in
+            if let pc = self?.pipes.count, pc == 0 {
+                self?.cm.cancelPeripheralConnection(peripheral)
+                completion(nil, .noPipeEnd)
+            }
+        }
+    }
+    
+    private func onDisconnected(_ peripheral: CBPeripheral, completion: BPConnectCompletion) {
+        self.pipes = [:]
+        let remotePeripheral = BPRemotePeripheral(peripheral: peripheral)
+        completion(remotePeripheral, nil)
+    }
+    
     public func connect(_ peripheral: CBPeripheral, completion: @escaping BPConnectCompletion) {
-        if let c = connections.filter({$0.peripheral.identifier == peripheral.identifier}).first {
-                let error: BPError = c.peripheral.state == .connected ? .alreadyConnected : .alreadyConnecting
+        guard let c = connections.filter({$0.peripheral.identifier == peripheral.identifier}).first else {
+            let peripherals = self.cm.retrievePeripherals(withIdentifiers: [peripheral.identifier])
+            guard let target = peripherals.first else {
+                completion(nil, .notFound)
+                return
+            }
+            let connection = BPConnection(cm: cm, peripheral: target, completion: completion)
+            syncQueue.async { [weak self] in
+                self?.connections.append(connection)
+            }
+            connection.start()
+            return
+        }
+        guard c.peripheral.state != .connected else {
+                let error: BPError = .alreadyConnected
                 completion(nil, error)
             return
         }
-
-        let peripherals = self.cm.retrievePeripherals(withIdentifiers: [peripheral.identifier])
-        guard let target = peripherals.first else {
-            completion(nil, .notFound)
-            return
-        }
-        let connection = BPConnection(cm: cm, peripheral: target, completion: completion)
-        syncQueue.async { [weak self] in
-            self?.connections.append(connection)
-        }
-        connection.start()
+        
+        c.start()
     }
     
     public func disconnect(_ peripheral: CBPeripheral, completion: @escaping BPConnectCompletion) {

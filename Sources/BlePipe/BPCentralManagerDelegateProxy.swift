@@ -39,11 +39,17 @@ class BPCentralManagerDelegateProxy: NSObject, CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        connectionClosure?(peripheral, .sysError(error))
+        if let error = error {
+            connectionClosure?(peripheral, .sysError(error))
+        }
+        connectionClosure?(peripheral, nil)
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        connectionClosure?(peripheral, .disconnect(error))
+        if let error = error {
+            connectionClosure?(peripheral, .sysError(error))
+        }
+        connectionClosure?(peripheral, nil)
     }
     
 }

@@ -27,6 +27,6 @@ extension BPDiscovery: Nameable {
 
 extension BPDiscovery: Equatable {
     public static func == (lhs: BPDiscovery, rhs: BPDiscovery) -> Bool {
-        return lhs.remote == rhs.remote
+        return lhs.remote.identifier == rhs.remote.identifier
     }
 }
