@@ -17,8 +17,7 @@ import BlePipe
 class ViewController: UITableViewController {
     
     let bp = BPScanner()
-    
-//    let bp2 = BPScanner()
+
     let central = BPCentral()
     
     var discoveries: [BPDiscovery] = []

@@ -3,6 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -37,10 +38,47 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <segue destination="65E-DL-j4l" kind="show" id="rpg-j8-UqU"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DlE-lj-2iy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1910.144927536232" y="58.928571428571423"/>
+        </scene>
+        <!--Transmit View Controller-->
+        <scene sceneID="8kT-PV-UzO">
+            <objects>
+                <viewController id="65E-DL-j4l" customClass="TransmitViewController" customModule="BPDemo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="HaE-1x-LZi">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6JI-HT-Tgz">
+                                <rect key="frame" x="20" y="104" width="374" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="uN1-W1-V4y"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="6JI-HT-Tgz" firstAttribute="top" secondItem="uN1-W1-V4y" secondAttribute="top" constant="16" id="1cB-L2-lRx"/>
+                            <constraint firstItem="uN1-W1-V4y" firstAttribute="trailing" secondItem="6JI-HT-Tgz" secondAttribute="trailing" constant="20" id="DrU-Px-2uP"/>
+                            <constraint firstItem="6JI-HT-Tgz" firstAttribute="leading" secondItem="uN1-W1-V4y" secondAttribute="leading" constant="20" id="lXg-Pl-tNE"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="dDf-k0-3zl">
+                        <barButtonItem key="rightBarButtonItem" title="Send" id="NSM-lD-0p9">
+                            <connections>
+                                <action selector="send:" destination="65E-DL-j4l" id="hJk-a4-O3L"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="A45-Qe-Wtc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2695.6521739130435" y="58.928571428571423"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="3fs-LO-XzW">
@@ -58,7 +96,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mci-VD-IS0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1000.0000000000001" y="58.928571428571423"/>
+            <point key="canvasLocation" x="1048" y="59"/>
         </scene>
     </scenes>
     <resources>

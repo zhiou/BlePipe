@@ -52,7 +52,7 @@ public class BPRemotePeripheral {
         peripheral.readValue(for: characteristic)
     }
     
-    func write(data: Data, for characteristic: CBCharacteristic, closure: @escaping BPWriteCompletion) {
+    public func write(data: Data, for characteristic: CBCharacteristic, closure: @escaping BPWriteCompletion) {
         delegateProxy.writeConfirmClosures[characteristic.uuid] = { error in
             if let error = error {
                 closure(.sysError(error))
