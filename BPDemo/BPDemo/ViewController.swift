@@ -14,6 +14,24 @@ import BlePipe
 //    }
 //}
 
+///
+/// BlePipe.target(?name regular?)
+///     .just(10)/untilTimeout))
+///     .timeout(10)
+///     .scan { peripheral in
+///         // let peripheral = Peripheral(displayName: "asdfasdf")
+///         let pipe = peripheral.build(name: String, writeEnd: CBUUID, recvEnd: CBUUID)
+///         pipe
+///         .send(data)
+///         .notify { recv in
+///             print(recv)
+///         }
+///         pip.notify { recv in
+///             print(recv)
+///         }
+/// }
+///
+
 class ViewController: UITableViewController {
     
     let bp = BPScanner()
