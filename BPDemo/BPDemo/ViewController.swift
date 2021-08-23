@@ -38,7 +38,6 @@ class ViewController: UITableViewController {
     let centralManager = CBCentralManager(delegate: nil, queue: nil)
     
     var discoveries: [BPDiscovery] = []
-    var peripherals: [BPRemotePeripheral] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -95,31 +94,15 @@ extension ViewController/*: UITableViewDelegate */{
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let discovery = discoveries[indexPath.row]
-        let endUUID = "477A2967-1FAB-4DC5-920A-DEE5DE685A3D"
-        discovery.remote.bp.build(remoteEnds: [endUUID]) { result in
-            let _ = result.map { [unowned self] rp in
-                self.peripherals.append(rp)
-                if let end = rp[endUUID] {
-                   
-                    end.subscribe { data, error in
-                        print(data)
-                        end.write(data: data!) { error in
-                            print(error)
-                        }
-                    }
-                }
-            }
+        self.performSegue(withIdentifier: "Transmit", sender: tableView.cellForRow(at:indexPath))
+     
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let vc = segue.destination as? TransmitViewController,
+        let cell = sender as? UITableViewCell,
+           let indexPath = tableView.indexPath(for: cell) {
+            vc.discovery = discoveries[indexPath.row]
         }
     }
-}
-
-extension Data {
-
-    static func dataWithNumberOfBytes(_ numberOfBytes: Int) -> Data {
-        let bytes = malloc(numberOfBytes)
-        let data = Data(bytes: bytes!, count: numberOfBytes)
-        free(bytes)
-        return data
-    }
-
 }

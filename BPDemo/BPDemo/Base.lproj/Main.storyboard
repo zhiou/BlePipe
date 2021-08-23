@@ -40,7 +40,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <segue destination="65E-DL-j4l" kind="show" id="rpg-j8-UqU"/>
+                        <segue destination="65E-DL-j4l" kind="show" identifier="Transmit" id="rpg-j8-UqU"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DlE-lj-2iy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
