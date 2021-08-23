@@ -18,8 +18,6 @@ public class BPCentralManager {
     
     private let syncQueue = DispatchQueue(label: "com.zzstudio.bp.sync")
     
-    private var pipes: [UUID: BPPipeEnd] = [:]
-    
     private var config: BPConfiguration
     
     public init(centralManager: CBCentralManager, config: BPConfiguration) {
@@ -54,33 +52,17 @@ public class BPCentralManager {
     private func onConnected(_ peripheral: CBPeripheral, completion: @escaping BPConnectCompletion) {
 
         let remotePeripheral = BPRemotePeripheral(peripheral: peripheral, configuration: self.config)
-        remotePeripheral.buildPipes { [weak self] pe, err in
-            if let err = err {
+        remotePeripheral.buildPipes { [weak self] error in
+            if let error = error {
                 self?.cm.cancelPeripheralConnection(peripheral)
-                completion(nil, err)
-                return
-            }
-            if let pe = pe {
-                self?.pipes[peripheral.identifier] = pe
-                let data = Data([0x00, 0x01, 0x02, 0x03])
-                pe.write(data: data) { error in
-                    if let error = error {
-                        completion(nil, error)
-                    } else {
-                        completion(remotePeripheral, nil)
-                    }
-                }
-            }
-        } completion: { [weak self] in
-            if let pc = self?.pipes.count, pc == 0 {
-                self?.cm.cancelPeripheralConnection(peripheral)
-                completion(nil, .noPipeEnd)
+                completion(nil, error)
+            } else {
+                completion(remotePeripheral, nil)
             }
         }
     }
     
     private func onDisconnected(_ peripheral: CBPeripheral, completion: BPConnectCompletion) {
-        self.pipes = [:]
         let remotePeripheral = BPRemotePeripheral(peripheral: peripheral)
         completion(remotePeripheral, nil)
     }

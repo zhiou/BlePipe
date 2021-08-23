@@ -16,28 +16,28 @@ public class BPPipeEnd {
         self.remote = remote
     }
     
-    func read(dataClosure: @escaping BPDataReceivedClosure) {
+    public func read(dataClosure: @escaping BPDataReceivedClosure) {
         guard characteristic.properties.contains(.read) else {
             return
         }
         remote?.read(for: characteristic, closure:dataClosure)
     }
     
-    func write(data: Data, completion: @escaping BPWriteCompletion) {
+    public func write(data: Data, completion: @escaping BPWriteCompletion) {
         guard characteristic.properties.contains(.write), characteristic.properties.contains(.writeWithoutResponse) else {
             return
         }
         remote?.write(data: data, for: characteristic, closure: completion)
     }
     
-    func subscribe(dataClosure: @escaping BPDataReceivedClosure) {
+    public func subscribe(dataClosure: @escaping BPDataReceivedClosure) {
         guard characteristic.properties.contains(.notify) else {
             return
         }
         remote?.subscribe(for: characteristic, closure: dataClosure)
     }
     
-    func unsubscribe() {
+    public func unsubscribe() {
         guard characteristic.properties.contains(.notify) else {
             return
         }

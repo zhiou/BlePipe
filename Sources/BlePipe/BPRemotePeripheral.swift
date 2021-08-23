@@ -8,7 +8,7 @@
 import CoreBluetooth
 
 public typealias BPPipeEndClosure = (BPPipeEnd?, BPError?) -> Void
-public typealias BPBuildPipeCompletion = () -> Void
+public typealias BPBuildPipeCompletion = (BPError?) -> Void
 public typealias BPWriteCompletion = (BPError?) -> Void
 
 public class BPRemotePeripheral {
@@ -16,6 +16,8 @@ public class BPRemotePeripheral {
     private let configuration: BPConfiguration?
     
     private let delegateProxy: BPPeripheralDelegateProxy = BPPeripheralDelegateProxy()
+    
+    private var pipes: [CBUUID: BPPipeEnd] = [:]
     
     public init(peripheral: CBPeripheral, configuration: BPConfiguration) {
         self.peripheral = peripheral
@@ -27,21 +29,21 @@ public class BPRemotePeripheral {
         self.configuration = nil
     }
     
-    public func buildPipes(closure: @escaping BPPipeEndClosure, completion: @escaping BPBuildPipeCompletion) {
+    public func buildPipes(_ completion: @escaping BPBuildPipeCompletion) {
         self.peripheral.delegate = delegateProxy
         delegateProxy.discovereCharacteristicCompletion = {
-            completion()
+            completion(nil)
         }
         delegateProxy.discoverdCharacteristicsClosure = { [weak self] characteristics, err in
             if let err = err {
-                closure(nil, .sysError(err))
+                completion(.sysError(err))
                 return
             }
             guard let characteristics = characteristics else { return }
             for c in characteristics {
                 guard let uuids = self?.configuration?.pipeEndUUIDs, uuids.contains(c.uuid) else { continue }
                 let pipeEnd = BPPipeEnd(c, remote:self)
-                closure(pipeEnd, nil)
+                self?.pipes[c.uuid] = pipeEnd
             }
         }
         peripheral.discoverServices(configuration?.serviceUUIDs)
@@ -61,7 +63,14 @@ public class BPRemotePeripheral {
             }
         }
         let type: CBCharacteristicWriteType = characteristic.properties.contains(.write) ? .withResponse : .withoutResponse;
-        peripheral.writeValue(data, for: characteristic, type: type)
+        print(peripheral.state == .connected)
+        print(characteristic.uuid.uuidString)
+        if #available(iOS 11.0, *) {
+            print(peripheral.canSendWriteWithoutResponse)
+        } else {
+            // Fallback on earlier versions
+        }
+        peripheral.writeValue(data, for: characteristic, type: .withoutResponse)
     }
     
     func subscribe(for characteristic: CBCharacteristic, closure: @escaping BPDataReceivedClosure) {
@@ -73,11 +82,21 @@ public class BPRemotePeripheral {
         peripheral.setNotifyValue(false, for: characteristic)
         delegateProxy.dataReceivedClosures[characteristic.uuid] = nil
     }
-
+    
+    deinit {
+        print("remote peripheral deinit")
+    }
 }
 
 extension BPRemotePeripheral: Equatable {
     public static func == (lhs: BPRemotePeripheral, rhs: BPRemotePeripheral) -> Bool {
         return lhs.peripheral.identifier == rhs.peripheral.identifier
+    }
+}
+
+extension BPRemotePeripheral {
+    public subscript(_ uuid: String) -> BPPipeEnd? {
+        let cbuuid = CBUUID(string: uuid)
+        return pipes[cbuuid]
     }
 }

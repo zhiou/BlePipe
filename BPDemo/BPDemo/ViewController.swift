@@ -95,10 +95,31 @@ extension ViewController/*: UITableViewDelegate */{
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let discovery = discoveries[indexPath.row]
-        discovery.remote.bp.build(remoteEnds: ["477A2967-1FAB-4DC5-920A-DEE5DE685A3D"]) { result in
+        let endUUID = "477A2967-1FAB-4DC5-920A-DEE5DE685A3D"
+        discovery.remote.bp.build(remoteEnds: [endUUID]) { result in
             let _ = result.map { [unowned self] rp in
                 self.peripherals.append(rp)
+                if let end = rp[endUUID] {
+                   
+                    end.subscribe { data, error in
+                        print(data)
+                        end.write(data: data!) { error in
+                            print(error)
+                        }
+                    }
+                }
             }
         }
     }
+}
+
+extension Data {
+
+    static func dataWithNumberOfBytes(_ numberOfBytes: Int) -> Data {
+        let bytes = malloc(numberOfBytes)
+        let data = Data(bytes: bytes!, count: numberOfBytes)
+        free(bytes)
+        return data
+    }
+
 }
