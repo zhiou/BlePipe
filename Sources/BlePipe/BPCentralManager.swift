@@ -25,6 +25,7 @@ public class BPCentralManager {
     public init(centralManager: CBCentralManager, config: BPConfiguration) {
         self.cm = centralManager
         self.config = config
+        cm.delegate = delegateProxy;
         delegateProxy.connectionClosure = { [weak self] peripheral, error in
             guard let c = self?.connections.filter({$0.peripheral.identifier == peripheral.identifier}).first else{
                 return
@@ -46,7 +47,7 @@ public class BPCentralManager {
                 print(peripheral.state)
             }
         }
-        cm.delegate = delegateProxy;
+
     }
     
     private func onConnected(_ peripheral: CBPeripheral, completion: @escaping BPConnectCompletion) {
@@ -98,8 +99,7 @@ public class BPCentralManager {
             return
         }
         guard c.peripheral.state != .connected else {
-                let error: BPError = .alreadyConnected
-                completion(nil, error)
+                completion(BPRemotePeripheral(peripheral: peripheral), nil)
             return
         }
         

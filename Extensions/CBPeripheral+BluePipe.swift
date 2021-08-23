@@ -19,15 +19,14 @@ extension BluePipeWrapper where Base: CBPeripheral {
         let cuuids = remoteEnds.map(CBUUID.init(string:))
         let config = BPConfiguration(serviceUUIDs: [], allowDuplicates: false, pipeEndUUIDs: cuuids)
         let cm = BPCentralManager(centralManager: centralManager, config: config)
-        if base.state == .disconnected {
-            cm.connect(base) { peripheral, error in
-                if let error = error {
-                    completionHandler(Result.failure(error))
-                    return
-                }
-                if let p = peripheral {
-                    completionHandler(Result.success(p))
-                }
+  
+        cm.connect(base) { peripheral, error in
+            if let error = error {
+                completionHandler(Result.failure(error))
+                return
+            }
+            if let p = peripheral {
+                completionHandler(Result.success(p))
             }
         }
     }

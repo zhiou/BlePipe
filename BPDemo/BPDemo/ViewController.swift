@@ -100,14 +100,5 @@ extension ViewController/*: UITableViewDelegate */{
                 self.peripherals.append(rp)
             }
         }
-//        self.central.connect(discovery.remote) { [unowned self] remotePeripheral, error in
-//            if let error = error {
-//                print(error)
-//                return
-//            }
-//            if let rp = remotePeripheral, !peripherals.contains(rp) {
-//                peripherals.append(rp)
-//            }
-//        }
     }
 }
