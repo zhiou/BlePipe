@@ -26,6 +26,7 @@ public class BPCentralManager {
         self.cm = centralManager
         self.config = config
         cm.delegate = delegateProxy;
+        self.connections = []
         delegateProxy.connectionClosure = { [weak self] peripheral, error in
             guard let c = self?.connections.filter({$0.peripheral.identifier == peripheral.identifier}).first else{
                 return
@@ -92,7 +93,7 @@ public class BPCentralManager {
                 return
             }
             let connection = BPConnection(cm: cm, peripheral: target, completion: completion)
-            syncQueue.async { [weak self] in
+            syncQueue.sync { [weak self] in
                 self?.connections.append(connection)
             }
             connection.start()

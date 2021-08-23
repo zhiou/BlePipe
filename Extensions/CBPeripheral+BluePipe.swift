@@ -29,6 +29,17 @@ extension BluePipeWrapper where Base: CBPeripheral {
                 completionHandler(Result.success(p))
             }
         }
+        var mutatingSelf = self
+        mutatingSelf.manager = cm
+    }
+}
+
+private var centralManagerKey: Void?
+
+extension BluePipeWrapper where Base: CBPeripheral {
+    var manager: BPCentralManager? {
+        get { objc_getAssociatedObject(base, &centralManagerKey) as? BPCentralManager }
+        set { objc_setAssociatedObject(base, &centralManagerKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 }
 
