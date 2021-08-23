@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9F3EE6C426C229930087282E /* BPCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3EE6C326C229930087282E /* BPCentral.swift */; };
+		9F01263726D342D200C09B72 /* BluePipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F01263626D342D200C09B72 /* BluePipe.swift */; };
+		9F01263A26D3449900C09B72 /* CBCentralManager+BluePipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F01263926D3449900C09B72 /* CBCentralManager+BluePipe.swift */; };
+		9F01263C26D3798C00C09B72 /* CBPeripheral+BluePipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F01263B26D3798C00C09B72 /* CBPeripheral+BluePipe.swift */; };
+		9F3EE6C426C229930087282E /* BPCentralManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3EE6C326C229930087282E /* BPCentralManager.swift */; };
 		9F3EE6C726C22B550087282E /* BPRemotePeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3EE6C626C22B550087282E /* BPRemotePeripheral.swift */; };
 		9F3EE6C926C2512C0087282E /* BPConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3EE6C826C2512C0087282E /* BPConnection.swift */; };
 		9F3EE6CD26C37AB20087282E /* BPPeripheralDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3EE6CC26C37AB20087282E /* BPPeripheralDelegateProxy.swift */; };
@@ -20,7 +23,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9F3EE6C326C229930087282E /* BPCentral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPCentral.swift; sourceTree = "<group>"; };
+		9F01263626D342D200C09B72 /* BluePipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluePipe.swift; sourceTree = "<group>"; };
+		9F01263926D3449900C09B72 /* CBCentralManager+BluePipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CBCentralManager+BluePipe.swift"; sourceTree = "<group>"; };
+		9F01263B26D3798C00C09B72 /* CBPeripheral+BluePipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CBPeripheral+BluePipe.swift"; sourceTree = "<group>"; };
+		9F3EE6C326C229930087282E /* BPCentralManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPCentralManager.swift; sourceTree = "<group>"; };
 		9F3EE6C626C22B550087282E /* BPRemotePeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPRemotePeripheral.swift; sourceTree = "<group>"; };
 		9F3EE6C826C2512C0087282E /* BPConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPConnection.swift; sourceTree = "<group>"; };
 		9F3EE6CC26C37AB20087282E /* BPPeripheralDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPPeripheralDelegateProxy.swift; sourceTree = "<group>"; };
@@ -47,6 +53,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9F01263826D343DF00C09B72 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				9F01263926D3449900C09B72 /* CBCentralManager+BluePipe.swift */,
+				9F01263B26D3798C00C09B72 /* CBPeripheral+BluePipe.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		OBJ_17 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -69,6 +84,7 @@
 		OBJ_7 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				9F01263826D343DF00C09B72 /* Extensions */,
 				OBJ_8 /* BlePipe */,
 			);
 			name = Sources;
@@ -82,11 +98,12 @@
 				OBJ_11 /* BPDiscovery.swift */,
 				OBJ_12 /* BPError.swift */,
 				OBJ_13 /* BPScanner.swift */,
-				9F3EE6C326C229930087282E /* BPCentral.swift */,
+				9F3EE6C326C229930087282E /* BPCentralManager.swift */,
 				9F3EE6C626C22B550087282E /* BPRemotePeripheral.swift */,
 				9F3EE6C826C2512C0087282E /* BPConnection.swift */,
 				9F3EE6CC26C37AB20087282E /* BPPeripheralDelegateProxy.swift */,
 				9F3EE6CE26C3AC730087282E /* BPPipeEnd.swift */,
+				9F01263626D342D200C09B72 /* BluePipe.swift */,
 			);
 			name = BlePipe;
 			path = Sources/BlePipe;
@@ -144,7 +161,10 @@
 			files = (
 				OBJ_28 /* BPCentralManagerDelegateProxy.swift in Sources */,
 				9F3EE6C726C22B550087282E /* BPRemotePeripheral.swift in Sources */,
-				9F3EE6C426C229930087282E /* BPCentral.swift in Sources */,
+				9F01263726D342D200C09B72 /* BluePipe.swift in Sources */,
+				9F01263C26D3798C00C09B72 /* CBPeripheral+BluePipe.swift in Sources */,
+				9F3EE6C426C229930087282E /* BPCentralManager.swift in Sources */,
+				9F01263A26D3449900C09B72 /* CBCentralManager+BluePipe.swift in Sources */,
 				9F3EE6CD26C37AB20087282E /* BPPeripheralDelegateProxy.swift in Sources */,
 				OBJ_29 /* BPConfiguration.swift in Sources */,
 				OBJ_30 /* BPDiscovery.swift in Sources */,

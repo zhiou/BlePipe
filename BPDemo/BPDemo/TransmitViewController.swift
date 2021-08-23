@@ -10,7 +10,7 @@ import UIKit
 
 class TransmitViewController: UIViewController {
     var peripheral: BPRemotePeripheral?
-    var central: BPCentral?
+
     
     @IBAction func send(_ sender: Any) {
     }

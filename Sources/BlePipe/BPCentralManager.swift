@@ -8,11 +8,11 @@
 import CoreBluetooth
 
 
-public class BPCentral {
+public class BPCentralManager {
+    
+    private let cm: CBCentralManager
     
     private let delegateProxy = BPCentralManagerDelegateProxy()
-    
-    private lazy var cm = CBCentralManager(delegate: delegateProxy, queue: nil, options: nil)
     
     private var connections: [BPConnection] = []
     
@@ -20,7 +20,11 @@ public class BPCentral {
     
     private var pipes: [UUID: BPPipeEnd] = [:]
     
-    public init() {
+    private var config: BPConfiguration
+    
+    public init(centralManager: CBCentralManager, config: BPConfiguration) {
+        self.cm = centralManager
+        self.config = config
         delegateProxy.connectionClosure = { [weak self] peripheral, error in
             guard let c = self?.connections.filter({$0.peripheral.identifier == peripheral.identifier}).first else{
                 return
@@ -42,13 +46,12 @@ public class BPCentral {
                 print(peripheral.state)
             }
         }
+        cm.delegate = delegateProxy;
     }
     
     private func onConnected(_ peripheral: CBPeripheral, completion: @escaping BPConnectCompletion) {
-        let dataServiceUUID = CBUUID(string: "6E6B5C64-FAF7-40AE-9C21-D4933AF45B23")
-        let dataServiceCharacteristicUUID = CBUUID(string: "477A2967-1FAB-4DC5-920A-DEE5DE685A3D")
-        let config = BPConfiguration(serviceUUIDs: [dataServiceUUID], allowDuplicates: false, pipeEndUUIDs: [dataServiceCharacteristicUUID])
-        let remotePeripheral = BPRemotePeripheral(peripheral: peripheral, configuration: config)
+
+        let remotePeripheral = BPRemotePeripheral(peripheral: peripheral, configuration: self.config)
         remotePeripheral.buildPipes { [weak self] pe, err in
             if let err = err {
                 self?.cm.cancelPeripheralConnection(peripheral)

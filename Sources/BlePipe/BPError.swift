@@ -15,4 +15,5 @@ public enum BPError: Error {
     case alreadyDisconnected
     case sysError(Error?)
     case noPipeEnd
+    case unkownDevice
 }

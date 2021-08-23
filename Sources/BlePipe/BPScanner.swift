@@ -5,7 +5,7 @@ public typealias BPDidStopScanClosure = (BPError?) -> Void
 
 public class BPScanner {
 
-    private lazy var  cm: CBCentralManager = CBCentralManager(delegate: delegateProxy, queue: nil, options: nil)
+    private var  cm: CBCentralManager
     
     private let delegateProxy: BPCentralManagerDelegateProxy = BPCentralManagerDelegateProxy()
     
@@ -36,7 +36,8 @@ public class BPScanner {
     public var didStop: BPDidStopScanClosure?
     public var willStart: BPWillStartScanClosure?
     
-    public init() {
+    public init(centralManager: CBCentralManager) {
+        cm = centralManager
         delegateProxy.stateClosure = { [unowned self] state in
             switch state {
             case .poweredOn:
@@ -45,6 +46,7 @@ public class BPScanner {
                 self.task = nil
             }
         }
+        cm.delegate = delegateProxy
     }
     
     deinit {
