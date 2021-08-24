@@ -23,13 +23,11 @@ import CoreBluetooth
 ///
 ///         let pipe = peripheral.bp.build(name: String, writeEnd: CBUUID, recvEnd: CBUUID)
 ///         pipe
-///         .send(data)
-///         .notify { recv in
+///         .unsubscribe { recv in
 ///             print(recv)
 ///         }
-///         pip.notify { recv in
-///             print(recv)
-///         }
+///
+///         pipe.write(data)
 /// }
 ///
 
