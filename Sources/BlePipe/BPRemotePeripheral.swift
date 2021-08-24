@@ -11,6 +11,7 @@ public typealias BPPipeEndClosure = (BPPipeEnd?, BPError?) -> Void
 public typealias BPBuildPipeCompletion = (BPError?) -> Void
 public typealias BPWriteCompletion = (BPError?) ->  Void
 
+
 public class BPRemotePeripheral {
     private let peripheral: CBPeripheral
     private let configuration: BPConfiguration?
@@ -18,6 +19,8 @@ public class BPRemotePeripheral {
     private let delegateProxy: BPPeripheralDelegateProxy = BPPeripheralDelegateProxy()
     
     private var pipes: [CBUUID: BPPipeEnd] = [:]
+    
+    private lazy var writeQueue: DispatchQueue = DispatchQueue(label: "com.bp.write.queue")
     
     public var maxFrameSize: Int {
         if #available(iOS 9.0, *) {
@@ -82,13 +85,16 @@ public class BPRemotePeripheral {
             
             /// Sleeping at most 8ms every frame can prevent sending task from fail.
             guard #available(iOS 11.0, *) else {
-                usleep(useconds_t(data.count * 400))
-                completion(nil)
+                writeQueue.async {
+                    usleep(useconds_t(data.count * 400))
+                    completion(nil)
+                }
                 return
             }
         } else {
             delegateProxy.writeConfirmClosures[characteristic.uuid] = { error in
                 guard error == nil else {
+                    completion(.sysError(error))
                     return
                 }
                 completion(nil)
