@@ -39,9 +39,9 @@ class TransmitViewController: UIViewController {
     }
     
     @IBAction func send(_ sender: Any) {
-        for _ in 1 ..< 10 {
+//        for _ in 1 ..< 10 {
             sendRandomPacket()
-        }
+//        }
     }
     
     private func sendRandomPacket() {
@@ -54,37 +54,28 @@ class TransmitViewController: UIViewController {
                 try? end.write(data: endMark)
             }
             print(data.base64EncodedString())
-            log.append(contentsOf: "send \(data.count)B, hash(\(data.md5))")
+            log.append(contentsOf: "send \(data.count)B, hash(\(data.md5))\n")
             logView.text = log
         }
-    }
-}
-
-
-extension String {
-    var md5:String {
-        let utf8 = cString(using: .utf8)
-        var digest = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
-        CC_MD5(utf8, CC_LONG(utf8!.count - 1), &digest)
-        return digest.reduce("") { $0 + String(format:"%02X", $1) }
     }
 }
 
 extension Data {
     
     static func dataWithNumberOfBytes(_ numberOfBytes: Int) -> Data {
-        let bytes = malloc(numberOfBytes)
-        let data = Data(bytes: bytes!, count: numberOfBytes)
-        free(bytes)
-        return data
+        let data:[UInt8] = (0..<numberOfBytes).map { _ in
+            return UInt8(arc4random() % 0xFF)
+        }
+        return Data(data)
     }
     
     var md5:String {
-        return withUnsafePointer(to: UInt8.self, { p in
-            var digest = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
-            CC_MD5(p, CC_LONG(self.count), &digest)
-            return digest.reduce("") { $0 + String(format:"%02X", $1) }
-        })
+        var md5 = Array<UInt8>(repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
+        let unsafe = [UInt8](self)
+        let length = CC_LONG(self.count)
+  
+        CC_MD5(unsafe, length, &md5)
+        return md5.reduce(""){ $0 + String(format:"%02X", $1) }
     }
     
 }
