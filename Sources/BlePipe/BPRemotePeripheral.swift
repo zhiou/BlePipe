@@ -9,7 +9,7 @@ import CoreBluetooth
 
 public typealias BPPipeEndClosure = (BPPipeEnd?, BPError?) -> Void
 public typealias BPBuildPipeCompletion = (BPError?) -> Void
-public typealias BPWriteCompletion = (BPError?) -> Void
+public typealias BPWriteConfirmed = (BPError?) -> Void
 
 public class BPRemotePeripheral {
     private let peripheral: CBPeripheral
@@ -18,6 +18,14 @@ public class BPRemotePeripheral {
     private let delegateProxy: BPPeripheralDelegateProxy = BPPeripheralDelegateProxy()
     
     private var pipes: [CBUUID: BPPipeEnd] = [:]
+    
+    public var maxFrameSize: Int {
+        if #available(iOS 9.0, *) {
+            return peripheral.maximumWriteValueLength(for: .withoutResponse)
+        } else {
+            return 20
+        }
+    }
     
     public init(peripheral: CBPeripheral, configuration: BPConfiguration) {
         self.peripheral = peripheral
@@ -54,23 +62,24 @@ public class BPRemotePeripheral {
         peripheral.readValue(for: characteristic)
     }
     
-    public func write(data: Data, for characteristic: CBCharacteristic, closure: @escaping BPWriteCompletion) {
-        delegateProxy.writeConfirmClosures[characteristic.uuid] = { error in
-            if let error = error {
-                closure(.sysError(error))
-            } else {
-                closure(nil)
-            }
+    public func write(data: Data, for characteristic: CBCharacteristic) throws {
+        guard characteristic.properties.contains(.write),
+              characteristic.properties.contains(.writeWithoutResponse) else {
+            throw BPError.invalidPort
         }
-        let type: CBCharacteristicWriteType = characteristic.properties.contains(.write) ? .withResponse : .withoutResponse;
-        print(peripheral.state == .connected)
-        print(characteristic.uuid.uuidString)
-        if #available(iOS 11.0, *) {
-            print(peripheral.canSendWriteWithoutResponse)
+        
+        guard peripheral.state == .connected else {
+            throw BPError.alreadyDisconnected
+        }
+        
+        if characteristic.properties.contains(.writeWithoutResponse) {
+            peripheral.writeValue(data, for: characteristic, type: .withoutResponse)
         } else {
-            // Fallback on earlier versions
+            delegateProxy.writeConfirmClosures[characteristic.uuid] = { error in
+                //TODO:
+            }
+            peripheral.writeValue(data, for: characteristic, type: .withResponse)
         }
-        peripheral.writeValue(data, for: characteristic, type: .withoutResponse)
     }
     
     func subscribe(for characteristic: CBCharacteristic, closure: @escaping BPDataReceivedClosure) {

@@ -16,4 +16,5 @@ public enum BPError: Error {
     case sysError(Error?)
     case noPipeEnd
     case unkownDevice
+    case invalidPort
 }

@@ -7,9 +7,15 @@
 
 import CoreBluetooth
 
+public typealias BPPacketReceivedClosure = (Data?, Error?) -> Void
+
 public class BPPipeEnd {
     private let characteristic: CBCharacteristic
     private weak var remote: BPRemotePeripheral?
+    
+    private var packets: [BPPacket] = []
+    
+    private let cache: BPCache = BPCache()
     
     init(_ characteristic: CBCharacteristic, remote: BPRemotePeripheral?) {
         self.characteristic = characteristic
@@ -20,21 +26,35 @@ public class BPPipeEnd {
         guard characteristic.properties.contains(.read) else {
             return
         }
+        
         remote?.read(for: characteristic, closure:dataClosure)
     }
     
-    public func write(data: Data, completion: @escaping BPWriteCompletion) {
-        guard characteristic.properties.contains(.write), characteristic.properties.contains(.writeWithoutResponse) else {
+    public func write(data: Data) throws {
+        guard let remote = remote else {
             return
         }
-        remote?.write(data: data, for: characteristic, closure: completion)
+        let packet = BPPacket(data: data, frameSize: remote.maxFrameSize)
+        packets.append(packet)
+        if packets.count > 0 {
+            try processPackets()
+        }
     }
     
-    public func subscribe(dataClosure: @escaping BPDataReceivedClosure) {
+    public func subscribe(dataClosure: @escaping BPPacketReceivedClosure) {
         guard characteristic.properties.contains(.notify) else {
             return
         }
-        remote?.subscribe(for: characteristic, closure: dataClosure)
+        cache.clear()
+        remote?.subscribe(for: characteristic, closure: { [weak self] frame, error in
+            if let error = error {
+                dataClosure(nil, error)
+                return
+            }
+            if let frame = frame, let packet = self?.cache.process(frame) {
+                dataClosure(packet, nil)
+            }
+        })
     }
     
     public func unsubscribe() {
@@ -42,5 +62,18 @@ public class BPPipeEnd {
             return
         }
         remote?.unsubscribe(for: characteristic)
+    }
+    
+    private func processPackets() throws {
+        guard let packet = packets.first else {
+            return
+        }
+        if packet.finished {
+            packets.remove(at: 0)
+            try processPackets()
+        } else if let frame = packet.next {
+            try remote?.write(data: frame, for: characteristic)
+            try processPackets()
+        }
     }
 }
