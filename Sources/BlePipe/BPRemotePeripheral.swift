@@ -9,7 +9,7 @@ import CoreBluetooth
 
 public typealias BPPipeEndClosure = (BPPipeEnd?, BPError?) -> Void
 public typealias BPBuildPipeCompletion = (BPError?) -> Void
-public typealias BPWriteConfirmed = (BPError?) -> Void
+public typealias BPWriteCompletion = (BPError?) ->  Void
 
 public class BPRemotePeripheral {
     private let peripheral: CBPeripheral
@@ -62,7 +62,7 @@ public class BPRemotePeripheral {
         peripheral.readValue(for: characteristic)
     }
     
-    public func write(data: Data, for characteristic: CBCharacteristic) throws {
+    public func write(data: Data, for characteristic: CBCharacteristic, completion: @escaping BPWriteCompletion) throws {
         guard characteristic.properties.contains(.write),
               characteristic.properties.contains(.writeWithoutResponse) else {
             throw BPError.invalidPort
@@ -73,10 +73,25 @@ public class BPRemotePeripheral {
         }
         
         if characteristic.properties.contains(.writeWithoutResponse) {
+            /// It won't work if system version is lower than iOS  11.0
+            delegateProxy.readyForWriteClosure = {
+                completion(nil)
+            }
+            
             peripheral.writeValue(data, for: characteristic, type: .withoutResponse)
+            
+            /// Sleeping at most 8ms every frame can prevent sending task from fail.
+            guard #available(iOS 11.0, *) else {
+                usleep(useconds_t(data.count * 400))
+                completion(nil)
+                return
+            }
         } else {
             delegateProxy.writeConfirmClosures[characteristic.uuid] = { error in
-                //TODO:
+                guard error == nil else {
+                    return
+                }
+                completion(nil)
             }
             peripheral.writeValue(data, for: characteristic, type: .withResponse)
         }

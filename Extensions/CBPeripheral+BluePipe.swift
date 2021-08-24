@@ -15,7 +15,7 @@ extension BluePipeWrapper where Base: CBPeripheral {
             completionHandler(Result.failure(.unkownDevice))
             return
         }
-//        let dataServiceCharacteristicUUID = CBUUID(string: "477A2967-1FAB-4DC5-920A-DEE5DE685A3D")
+        
         let cuuids = remoteEnds.map(CBUUID.init(string:))
         let config = BPConfiguration(serviceUUIDs: [], allowDuplicates: false, pipeEndUUIDs: cuuids)
         let cm = BPCentralManager(centralManager: centralManager, config: config)

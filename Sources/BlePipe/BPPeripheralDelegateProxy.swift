@@ -11,6 +11,7 @@ import CoreBluetooth
 public typealias BPDiscoveredCharacteristicClosure = ([CBCharacteristic]?, Error?) -> ()
 public typealias BPDataReceivedClosure = (Data?, Error?) -> Void
 public typealias BPWriteConfirmClosure = (Error?) -> Void
+public typealias BPReadyForWriteClosure = () -> Void
 public typealias BPDiscovereCharacteristicCompletion = () -> Void
 
 class BPPeripheralDelegateProxy: NSObject, CBPeripheralDelegate {
@@ -19,6 +20,7 @@ class BPPeripheralDelegateProxy: NSObject, CBPeripheralDelegate {
     var dataReceivedClosures: [CBUUID: BPDataReceivedClosure] = [:]
     var writeConfirmClosures: [CBUUID: BPWriteConfirmClosure] = [:]
     var discovereCharacteristicCompletion: BPDiscovereCharacteristicCompletion?
+    var readyForWriteClosure: BPReadyForWriteClosure? 
     
     private var discoverServiceCount: Int = 0 {
         willSet {
@@ -33,7 +35,7 @@ class BPPeripheralDelegateProxy: NSObject, CBPeripheralDelegate {
     }
     
     func peripheralIsReady(toSendWriteWithoutResponse peripheral: CBPeripheral) {
-        
+        readyForWriteClosure?()
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {

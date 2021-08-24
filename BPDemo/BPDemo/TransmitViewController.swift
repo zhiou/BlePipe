@@ -29,7 +29,7 @@ class TransmitViewController: UIViewController {
                             return
                         }
                         if let data = data {
-                            self.log.append("recv \(data.count)B, hash(\(data.md5))")
+                            self.log.append("recv \(data.count)B, hash(\(data.md5))\n")
                             self.logView.text = log
                         }
                     }
@@ -39,21 +39,18 @@ class TransmitViewController: UIViewController {
     }
     
     @IBAction func send(_ sender: Any) {
-//        for _ in 1 ..< 10 {
             sendRandomPacket()
-//        }
     }
     
     private func sendRandomPacket() {
         if let rp = peripherals.first {
-            let numberOfBytesToSend: Int = Int(arc4random() % 520 + 50)
+            let numberOfBytesToSend: Int = Int(arc4random() % 0x800)
             let data = Data.dataWithNumberOfBytes(numberOfBytesToSend)
             let endMark = "EOD".data(using: .utf8)!
             if let end = rp[endUUID] {
                 try? end.write(data: data)
                 try? end.write(data: endMark)
             }
-            print(data.base64EncodedString())
             log.append(contentsOf: "send \(data.count)B, hash(\(data.md5))\n")
             logView.text = log
         }

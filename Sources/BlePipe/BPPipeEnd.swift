@@ -37,7 +37,7 @@ public class BPPipeEnd {
         let packet = BPPacket(data: data, frameSize: remote.maxFrameSize)
         packets.append(packet)
         if packets.count > 0 {
-            try processPackets()
+            processPackets()
         }
     }
     
@@ -64,16 +64,22 @@ public class BPPipeEnd {
         remote?.unsubscribe(for: characteristic)
     }
     
-    private func processPackets() throws {
+    private func processPackets() {
         guard let packet = packets.first else {
             return
         }
         if packet.finished {
             packets.remove(at: 0)
-            try processPackets()
+             processPackets()
         } else if let frame = packet.next {
-            try remote?.write(data: frame, for: characteristic)
-            try processPackets()
+            do {
+                try remote?.write(data: frame, for: characteristic, completion: { [weak self] error in
+                    self?.processPackets()
+                })
+            } catch {
+                print("write data failed")
+                return
+            }
         }
     }
 }
