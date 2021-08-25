@@ -17,6 +17,8 @@
 		9F3EE6C926C2512C0087282E /* BPConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3EE6C826C2512C0087282E /* BPConnection.swift */; };
 		9F3EE6CD26C37AB20087282E /* BPPeripheralDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3EE6CC26C37AB20087282E /* BPPeripheralDelegateProxy.swift */; };
 		9F3EE6CF26C3AC730087282E /* BPPipeEnd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3EE6CE26C3AC730087282E /* BPPipeEnd.swift */; };
+		9FF0B86F26D5E902001F9B19 /* BPPeripheralManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF0B86E26D5E902001F9B19 /* BPPeripheralManager.swift */; };
+		9FF0B87126D5EBB9001F9B19 /* BPPeripheralManagerDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF0B87026D5EBB9001F9B19 /* BPPeripheralManagerDelegateProxy.swift */; };
 		OBJ_28 /* BPCentralManagerDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* BPCentralManagerDelegateProxy.swift */; };
 		OBJ_29 /* BPConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* BPConfiguration.swift */; };
 		OBJ_30 /* BPDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* BPDiscovery.swift */; };
@@ -35,6 +37,8 @@
 		9F3EE6C826C2512C0087282E /* BPConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPConnection.swift; sourceTree = "<group>"; };
 		9F3EE6CC26C37AB20087282E /* BPPeripheralDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPPeripheralDelegateProxy.swift; sourceTree = "<group>"; };
 		9F3EE6CE26C3AC730087282E /* BPPipeEnd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPPipeEnd.swift; sourceTree = "<group>"; };
+		9FF0B86E26D5E902001F9B19 /* BPPeripheralManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPPeripheralManager.swift; sourceTree = "<group>"; };
+		9FF0B87026D5EBB9001F9B19 /* BPPeripheralManagerDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPPeripheralManagerDelegateProxy.swift; sourceTree = "<group>"; };
 		"BlePipe::BlePipe::Product" /* BlePipe.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BlePipe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_10 /* BPConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPConfiguration.swift; sourceTree = "<group>"; };
 		OBJ_11 /* BPDiscovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPDiscovery.swift; sourceTree = "<group>"; };
@@ -64,6 +68,28 @@
 				9F01263B26D3798C00C09B72 /* CBPeripheral+BluePipe.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		9FF0B86C26D5E8A4001F9B19 /* Central */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_9 /* BPCentralManagerDelegateProxy.swift */,
+				OBJ_11 /* BPDiscovery.swift */,
+				OBJ_13 /* BPScanner.swift */,
+				9F3EE6C326C229930087282E /* BPCentralManager.swift */,
+				9F3EE6C626C22B550087282E /* BPRemotePeripheral.swift */,
+				9F3EE6CC26C37AB20087282E /* BPPeripheralDelegateProxy.swift */,
+			);
+			path = Central;
+			sourceTree = "<group>";
+		};
+		9FF0B86D26D5E8C0001F9B19 /* Peripheral */ = {
+			isa = PBXGroup;
+			children = (
+				9FF0B86E26D5E902001F9B19 /* BPPeripheralManager.swift */,
+				9FF0B87026D5EBB9001F9B19 /* BPPeripheralManagerDelegateProxy.swift */,
+			);
+			path = Peripheral;
 			sourceTree = "<group>";
 		};
 		OBJ_17 /* Products */ = {
@@ -97,15 +123,11 @@
 		OBJ_8 /* BlePipe */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_9 /* BPCentralManagerDelegateProxy.swift */,
+				9FF0B86D26D5E8C0001F9B19 /* Peripheral */,
+				9FF0B86C26D5E8A4001F9B19 /* Central */,
 				OBJ_10 /* BPConfiguration.swift */,
-				OBJ_11 /* BPDiscovery.swift */,
 				OBJ_12 /* BPError.swift */,
-				OBJ_13 /* BPScanner.swift */,
-				9F3EE6C326C229930087282E /* BPCentralManager.swift */,
-				9F3EE6C626C22B550087282E /* BPRemotePeripheral.swift */,
 				9F3EE6C826C2512C0087282E /* BPConnection.swift */,
-				9F3EE6CC26C37AB20087282E /* BPPeripheralDelegateProxy.swift */,
 				9F3EE6CE26C3AC730087282E /* BPPipeEnd.swift */,
 				9F01263626D342D200C09B72 /* BluePipe.swift */,
 				9F01264026D48CBD00C09B72 /* BPPacket.swift */,
@@ -178,6 +200,8 @@
 				OBJ_30 /* BPDiscovery.swift in Sources */,
 				OBJ_31 /* BPError.swift in Sources */,
 				OBJ_32 /* BPScanner.swift in Sources */,
+				9FF0B87126D5EBB9001F9B19 /* BPPeripheralManagerDelegateProxy.swift in Sources */,
+				9FF0B86F26D5E902001F9B19 /* BPPeripheralManager.swift in Sources */,
 				9F3EE6C926C2512C0087282E /* BPConnection.swift in Sources */,
 				9F3EE6CF26C3AC730087282E /* BPPipeEnd.swift in Sources */,
 			);
