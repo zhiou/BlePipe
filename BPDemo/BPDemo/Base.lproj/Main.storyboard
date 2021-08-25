@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="36" id="Ome-Ka-SjR">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Discovery" rowHeight="36" id="Ome-Ka-SjR">
                                 <rect key="frame" x="0.0" y="44.5" width="414" height="36"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ome-Ka-SjR" id="ceG-DK-1bm">
@@ -55,8 +55,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Log" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eiL-vV-gFZ">
-                                <rect key="frame" x="20" y="88" width="65" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Log" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eiL-vV-gFZ">
+                                <rect key="frame" x="20" y="88" width="374" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -65,7 +65,7 @@
                                 <rect key="frame" x="20" y="117" width="374" height="745"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <color key="textColor" systemColor="labelColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                         </subviews>
@@ -76,6 +76,7 @@
                             <constraint firstItem="uN1-W1-V4y" firstAttribute="bottom" secondItem="sDe-vf-YOF" secondAttribute="bottom" id="Lzn-gX-HUM"/>
                             <constraint firstItem="sDe-vf-YOF" firstAttribute="leading" secondItem="uN1-W1-V4y" secondAttribute="leading" constant="20" id="NbL-dD-duv"/>
                             <constraint firstItem="sDe-vf-YOF" firstAttribute="top" secondItem="eiL-vV-gFZ" secondAttribute="bottom" constant="8" symbolic="YES" id="RW9-o7-bgp"/>
+                            <constraint firstItem="uN1-W1-V4y" firstAttribute="trailing" secondItem="eiL-vV-gFZ" secondAttribute="trailing" constant="20" id="WUk-Gv-nV2"/>
                             <constraint firstItem="eiL-vV-gFZ" firstAttribute="leading" secondItem="uN1-W1-V4y" secondAttribute="leading" constant="20" id="Ym9-yb-Tt2"/>
                             <constraint firstItem="uN1-W1-V4y" firstAttribute="trailing" secondItem="sDe-vf-YOF" secondAttribute="trailing" constant="20" id="vBH-NN-kOc"/>
                         </constraints>

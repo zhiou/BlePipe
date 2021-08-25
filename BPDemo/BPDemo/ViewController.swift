@@ -56,7 +56,9 @@ class ViewController: UITableViewController {
             .just(.untilTimeout)
             .willStartScan { [unowned self] in
                 self.discoveries = []
-                self.tableView.reloadData()
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
             }
             .didStopScan {
                 print("stop discover")
@@ -82,7 +84,7 @@ extension ViewController/*: UITableViewDataSource */{
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: "discovery")
+        let cell = UITableViewCell(style: .default, reuseIdentifier: "Discovery")
         cell.textLabel?.text = discoveries[indexPath.row].displayName;
         return cell;
     }
@@ -91,7 +93,6 @@ extension ViewController/*: UITableViewDataSource */{
 extension ViewController/*: UITableViewDelegate */{
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let discovery = discoveries[indexPath.row]
         self.performSegue(withIdentifier: "Transmit", sender: tableView.cellForRow(at:indexPath))
      
     }
