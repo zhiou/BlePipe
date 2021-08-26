@@ -10,22 +10,19 @@ import BlePipe
 import CoreBluetooth
 
 class PeripheralManagerViewController: UIViewController {
+    var builder: BP.Builder? = nil
     override func viewDidLoad() {
         super.viewDidLoad()
-        BP.peripheralManager()
+        builder = BP.peripheralManager()
             .service { service in
-                service.uuidString("1234-3211-1111-1111")
+                service.uuidString("6E6B5C64-FAF7-40AE-9C21-D4933AF45B23")
                     .primary(true)
                     .characteristic { characteristic in
-                        characteristic.uuidString("1234-3211-1111-1112")
+                        characteristic.uuidString("477A2967-1FAB-4DC5-920A-DEE5DE685A3D")
                             .properties([ .read, .notify, .writeWithoutResponse, .write ])
                             .permissions ([ .readable, .writeable ])
                     }
             }
-            .service { service in
-                service.uuidString ("1234-3211-1111-1112")
-                    .primary(true)
-            }
-            .advertise(nil)
+        builder?.advertise([CBAdvertisementDataLocalNameKey: "BPDemo"])
     }
 }

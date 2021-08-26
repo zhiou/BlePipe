@@ -48,7 +48,10 @@ public class BPServiceBuilder {
     public func characteristic(_ build: (BPCharacteristicBuilder) -> Void) -> Self {
         let builder = BPCharacteristicBuilder()
         build(builder)
-        let characteristic = CBMutableCharacteristic(type: CBUUID(string: builder.uuidString), properties: builder.properties, value: builder.value, permissions: builder.permissions)
+        let characteristic = CBMutableCharacteristic(type: CBUUID(string: builder.uuidString),
+                                                     properties: builder.properties,
+                                                     value: builder.value,
+                                                     permissions: builder.permissions)
         characteristics.append(characteristic)
         return self
     }
@@ -71,10 +74,19 @@ public class BPPeripheralManager {
     private lazy var pm = CBPeripheralManager(delegate: peripheralManagerDelegateProxy, queue: nil)
     
     private var ports: [BPPort] = [] // central.identifier : [port]
+    private var advertisementData: [String: Any]? = nil
+    private var services: [CBMutableService] = []
+    
+    deinit {
+        print("pm deinit")
+    }
     
     public init() {
-        peripheralManagerDelegateProxy.didAddService = { result in
-        
+        peripheralManagerDelegateProxy.didAddService = { [unowned self] result in
+            print("did add service")
+            if !self.pm.isAdvertising {
+                self.pm.startAdvertising(self.advertisementData)
+            }
         }
         
         peripheralManagerDelegateProxy.onWrite = { [unowned self] central, characteristic, data in
@@ -104,6 +116,15 @@ public class BPPeripheralManager {
                 }
             }
         }
+        
+        peripheralManagerDelegateProxy.didUpdateState = { [unowned self] state in
+            if case state = CBManagerState.poweredOn {
+                self.services.forEach { service in
+                    self.pm.add(service)
+                }
+            }
+        }
+        
     }
     
     @discardableResult
@@ -111,15 +132,16 @@ public class BPPeripheralManager {
         let builder = BPServiceBuilder()
         build(builder)
         let service = CBMutableService(type: CBUUID(string: builder.uuidString), primary: builder.primary)
-        service.characteristics?.append(contentsOf: builder.characteristics)
-        pm.add(service)
+        service.characteristics = builder.characteristics
+        if self.pm.isAdvertising {
+//            pm.stopAdvertising()
+        }
+        services.append(service)
         return self
     }
     
     public func advertise(advertisementData: [String: Any]?) {
-        if !pm.isAdvertising {
-            pm.startAdvertising(advertisementData)
-        }
+        self.advertisementData = advertisementData
     }
 
     public func notify(_ characteristic: CBMutableCharacteristic, remote: CBCentral, data: Data, completion: @escaping BPPeripheralDidUpdateClosure) {

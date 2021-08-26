@@ -20,6 +20,10 @@ extension BP {
         init() {
             self.peripheralManager = BPPeripheralManager()
         }
+        
+        deinit {
+            print("builder deinit")
+        }
     }
 }
 

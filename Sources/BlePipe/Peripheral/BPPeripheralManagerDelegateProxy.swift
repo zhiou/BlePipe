@@ -12,6 +12,7 @@ public typealias BPPeripheralOnWriteClosure = (CBCentral, CBCharacteristic, Data
 public typealias BPPeripheralDidUpdateClosure = () -> Void
 public typealias BPPeripheralDidSubscribeClosure = (CBCentral, CBCharacteristic) -> Void
 public typealias BPPeripheralDidUnsubscribeClosure = (CBCentral, CBCharacteristic) -> Void
+public typealias BPPeripheralDidUpdateState = (CBManagerState) -> Void
 
 class BPPeripheralManagerDelegateProxy: NSObject, CBPeripheralManagerDelegate {
     
@@ -20,13 +21,15 @@ class BPPeripheralManagerDelegateProxy: NSObject, CBPeripheralManagerDelegate {
     var didUpdateClosure: BPPeripheralDidUpdateClosure?
     var didSubscribeClosure: BPPeripheralDidSubscribeClosure?
     var didUnsubscribeClosure:BPPeripheralDidUnsubscribeClosure?
+    var didUpdateState: BPPeripheralDidUpdateState?
     
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
-        
+        print("did update state\( peripheral.state.rawValue)")
+        didUpdateState?(peripheral.state)
     }
     
     func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: Error?) {
-        
+        print("did start advertising")
     }
     
     func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveRead request: CBATTRequest) {
