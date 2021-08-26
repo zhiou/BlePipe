@@ -19,6 +19,8 @@
 		9F3EE6CF26C3AC730087282E /* BPPipeEnd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3EE6CE26C3AC730087282E /* BPPipeEnd.swift */; };
 		9FF0B86F26D5E902001F9B19 /* BPPeripheralManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF0B86E26D5E902001F9B19 /* BPPeripheralManager.swift */; };
 		9FF0B87126D5EBB9001F9B19 /* BPPeripheralManagerDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF0B87026D5EBB9001F9B19 /* BPPeripheralManagerDelegateProxy.swift */; };
+		9FF0B88026D770CD001F9B19 /* BP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF0B87F26D770CD001F9B19 /* BP.swift */; };
+		9FF0B88226D77F99001F9B19 /* BPPort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF0B88126D77F99001F9B19 /* BPPort.swift */; };
 		OBJ_28 /* BPCentralManagerDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* BPCentralManagerDelegateProxy.swift */; };
 		OBJ_29 /* BPConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* BPConfiguration.swift */; };
 		OBJ_30 /* BPDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* BPDiscovery.swift */; };
@@ -39,6 +41,8 @@
 		9F3EE6CE26C3AC730087282E /* BPPipeEnd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPPipeEnd.swift; sourceTree = "<group>"; };
 		9FF0B86E26D5E902001F9B19 /* BPPeripheralManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPPeripheralManager.swift; sourceTree = "<group>"; };
 		9FF0B87026D5EBB9001F9B19 /* BPPeripheralManagerDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPPeripheralManagerDelegateProxy.swift; sourceTree = "<group>"; };
+		9FF0B87F26D770CD001F9B19 /* BP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BP.swift; sourceTree = "<group>"; };
+		9FF0B88126D77F99001F9B19 /* BPPort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPPort.swift; sourceTree = "<group>"; };
 		"BlePipe::BlePipe::Product" /* BlePipe.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BlePipe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_10 /* BPConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPConfiguration.swift; sourceTree = "<group>"; };
 		OBJ_11 /* BPDiscovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPDiscovery.swift; sourceTree = "<group>"; };
@@ -88,6 +92,7 @@
 			children = (
 				9FF0B86E26D5E902001F9B19 /* BPPeripheralManager.swift */,
 				9FF0B87026D5EBB9001F9B19 /* BPPeripheralManagerDelegateProxy.swift */,
+				9FF0B88126D77F99001F9B19 /* BPPort.swift */,
 			);
 			path = Peripheral;
 			sourceTree = "<group>";
@@ -116,6 +121,7 @@
 			children = (
 				9F01263826D343DF00C09B72 /* Extensions */,
 				OBJ_8 /* BlePipe */,
+				9FF0B87F26D770CD001F9B19 /* BP.swift */,
 			);
 			name = Sources;
 			sourceTree = SOURCE_ROOT;
@@ -203,6 +209,8 @@
 				9FF0B87126D5EBB9001F9B19 /* BPPeripheralManagerDelegateProxy.swift in Sources */,
 				9FF0B86F26D5E902001F9B19 /* BPPeripheralManager.swift in Sources */,
 				9F3EE6C926C2512C0087282E /* BPConnection.swift in Sources */,
+				9FF0B88226D77F99001F9B19 /* BPPort.swift in Sources */,
+				9FF0B88026D770CD001F9B19 /* BP.swift in Sources */,
 				9F3EE6CF26C3AC730087282E /* BPPipeEnd.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

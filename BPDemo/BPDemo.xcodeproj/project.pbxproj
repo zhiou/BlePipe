@@ -17,6 +17,7 @@
 		9F690A3826C179FA00F280D4 /* BlePipe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9F690A2F26C175AE00F280D4 /* BlePipe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9F82FEA026CD1A2000A88658 /* TransmitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F82FE9F26CD1A2000A88658 /* TransmitViewController.swift */; };
 		9FF0B86B26D5E673001F9B19 /* PeripheralViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF0B86A26D5E673001F9B19 /* PeripheralViewController.swift */; };
+		9FF0B87E26D76BE7001F9B19 /* PeripheralManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF0B87D26D76BE7001F9B19 /* PeripheralManagerViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 		9F690A3526C179B200F280D4 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		9F82FE9F26CD1A2000A88658 /* TransmitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransmitViewController.swift; sourceTree = "<group>"; };
 		9FF0B86A26D5E673001F9B19 /* PeripheralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralViewController.swift; sourceTree = "<group>"; };
+		9FF0B87D26D76BE7001F9B19 /* PeripheralManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralManagerViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 				9F690A0D26C1739200F280D4 /* AppDelegate.swift */,
 				9F690A1126C1739200F280D4 /* ViewController.swift */,
 				9F82FE9F26CD1A2000A88658 /* TransmitViewController.swift */,
+				9FF0B87D26D76BE7001F9B19 /* PeripheralManagerViewController.swift */,
 				9F690A1326C1739200F280D4 /* Main.storyboard */,
 				9F690A1626C1739200F280D4 /* Assets.xcassets */,
 				9F690A1826C1739200F280D4 /* LaunchScreen.storyboard */,
@@ -215,6 +218,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9FF0B86B26D5E673001F9B19 /* PeripheralViewController.swift in Sources */,
+				9FF0B87E26D76BE7001F9B19 /* PeripheralManagerViewController.swift in Sources */,
 				9F82FEA026CD1A2000A88658 /* TransmitViewController.swift in Sources */,
 				9F690A1226C1739200F280D4 /* ViewController.swift in Sources */,
 				9F690A0E26C1739200F280D4 /* AppDelegate.swift in Sources */,
