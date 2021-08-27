@@ -119,9 +119,9 @@
 		OBJ_7 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				9FF0B87F26D770CD001F9B19 /* BP.swift */,
 				9F01263826D343DF00C09B72 /* Extensions */,
 				OBJ_8 /* BlePipe */,
-				9FF0B87F26D770CD001F9B19 /* BP.swift */,
 			);
 			name = Sources;
 			sourceTree = SOURCE_ROOT;
