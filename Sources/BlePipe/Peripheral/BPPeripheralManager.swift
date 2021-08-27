@@ -71,11 +71,15 @@ public class BPServiceBuilder {
 
 public class BPPeripheralManager {
     private let peripheralManagerDelegateProxy = BPPeripheralManagerDelegateProxy()
-    private lazy var pm = CBPeripheralManager(delegate: peripheralManagerDelegateProxy, queue: nil)
     
-    private var ports: [BPPort] = [] // central.identifier : [port]
+    private lazy var pm = CBPeripheralManager(delegate: peripheralManagerDelegateProxy, queue: DispatchQueue.init(label: "com.bp.pm.queue"))
+    
+    var ports: [BPPort] = [] // central.identifier : [port]
     private var advertisementData: [String: Any]? = nil
     private var services: [CBMutableService] = []
+    var portBuiltCallback: ((BPPort) -> Void)? = nil
+    
+    private let sem = DispatchSemaphore(value: 1)
     
     deinit {
         print("pm deinit")
@@ -93,6 +97,7 @@ public class BPPeripheralManager {
             var port = BPPort(characteristic, remote: central, pm: self)
             if !self.ports.contains(port) {
                 self.ports.append(port)
+                portBuiltCallback?(port)
             } else {
                 if let index = self.ports.firstIndex(of: port) {
                     port = self.ports[index]
@@ -105,6 +110,7 @@ public class BPPeripheralManager {
             let port = BPPort(characteristic, remote: central, pm: self)
             if !self.ports.contains(port) {
                 self.ports.append(port)
+                self.portBuiltCallback?(port)
             }
         }
         
@@ -123,6 +129,10 @@ public class BPPeripheralManager {
                     self.pm.add(service)
                 }
             }
+        }
+        
+        peripheralManagerDelegateProxy.didUpdateClosure = { [unowned self] in
+            self.sem.signal()
         }
         
     }
@@ -144,9 +154,11 @@ public class BPPeripheralManager {
         self.advertisementData = advertisementData
     }
 
-    public func notify(_ characteristic: CBMutableCharacteristic, remote: CBCentral, data: Data, completion: @escaping BPPeripheralDidUpdateClosure) {
-        peripheralManagerDelegateProxy.didUpdateClosure = completion
-        pm.updateValue(data, for: characteristic, onSubscribedCentrals: [remote])
+    public func notify(_ characteristic: CBMutableCharacteristic, remote: CBCentral, data: Data) -> Bool {
+        if !pm.updateValue(data, for: characteristic, onSubscribedCentrals: [remote]) {
+            sem.wait()
+            return pm.updateValue(data, for: characteristic, onSubscribedCentrals: [remote])
+        }
+        return true
     }
-
 }

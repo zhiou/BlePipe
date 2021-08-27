@@ -74,6 +74,9 @@ public class BPPipeEnd {
         } else if let frame = packet.next {
             do {
                 try remote?.write(data: frame, for: characteristic, completion: { [weak self] error in
+                    if let _ = error  {
+                        return
+                    }
                     self?.processPackets()
                 })
             } catch {

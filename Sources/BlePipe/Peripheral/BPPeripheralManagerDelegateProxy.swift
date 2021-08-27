@@ -37,7 +37,10 @@ class BPPeripheralManagerDelegateProxy: NSObject, CBPeripheralManagerDelegate {
     }
     
     func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
+        print("requests count = \(requests.count)")
+    
         requests.forEach { request in
+            print("request data \(request.value)")
             onWrite?(request.central, request.characteristic, request.value)
         }
         

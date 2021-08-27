@@ -12,7 +12,7 @@ class BPPacket {
     
     private let frameSize: Int
     
-    private var offset = 0
+    var offset = 0
     
     init(data: Data, frameSize: Int) {
         self.data = data
@@ -30,9 +30,13 @@ class BPPacket {
     var next: Data? {
         let length = frameSize < remainLength ? frameSize : remainLength
         if let range = Range(NSRange(location: offset, length: length)) {
-            offset += length;
+            offset += length
             return data.subdata(in: range)
         }
         return nil
+    }
+    
+    public func advance(_ length: Int) {
+        offset += length;
     }
 }

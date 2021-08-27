@@ -17,12 +17,24 @@ public class BPPort {
     
     private let cache: BPCache = BPCache()
     
-    var onFrameReceived:((Data?) -> Void)? 
+    private let queue = DispatchQueue(label: "com.bp.port.queue")
+    
+    var onFrameReceived:((Data?) -> Void)?
+    
+    private var packageReceivedClosure: ((Data?, BPError?) -> Void)? = nil
     
     init(_ characteristic: CBCharacteristic, remote: CBCentral, pm: BPPeripheralManager?) {
         self.characteristic = characteristic
         self.remote = remote
         self.pm = pm
+        
+        self.onFrameReceived =  { [weak self] frame in
+            if let frame = frame, let packet = self?.cache.process(frame) {
+                self?.queue.async {
+                    self?.packageReceivedClosure?(packet, nil)
+                }
+            }
+        }
     }
     
     public func notify(data: Data) throws {
@@ -37,14 +49,7 @@ public class BPPort {
         guard characteristic.properties.contains(.notify) else {
             return
         }
-        cache.clear()
-        if onFrameReceived == nil {
-            onFrameReceived =  { [weak self] frame in
-                if let frame = frame, let packet = self?.cache.process(frame) {
-                    dataClosure(packet, nil)
-                }
-            }
-        }
+        packageReceivedClosure = dataClosure
     }
     
     private func processPackets() {
@@ -55,10 +60,9 @@ public class BPPort {
             packets.remove(at: 0)
             processPackets()
         } else if let frame = packet.next {
-            pm?.notify(characteristic as! CBMutableCharacteristic, remote: remote, data: frame) { [weak self] in
-                self?.processPackets()
+            if let success = pm?.notify(characteristic as! CBMutableCharacteristic, remote: remote, data: frame), success {
+                processPackets()
             }
-            
         }
     }
 }

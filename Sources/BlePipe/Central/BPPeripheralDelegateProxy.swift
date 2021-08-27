@@ -35,6 +35,7 @@ class BPPeripheralDelegateProxy: NSObject, CBPeripheralDelegate {
     }
     
     func peripheralIsReady(toSendWriteWithoutResponse peripheral: CBPeripheral) {
+        print("ready for write")
         readyForWriteClosure?()
     }
     

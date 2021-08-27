@@ -19,9 +19,15 @@ class BPCache {
     }
     
     func process(_ frame: Data) -> Data? {
+//        print("frame size \(frame)")
         let finished = check(buffer: buffer, frame: frame)
+        if finished {
+            let packet = buffer;
+            buffer = Data()
+            return packet
+        }
         buffer.append(contentsOf: frame)
-        return finished ? buffer : nil
+        return nil
     }
     
     private func check(buffer: Data, frame: Data) -> Bool {

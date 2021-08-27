@@ -37,4 +37,9 @@ extension BP.Builder {
         self.peripheralManager.service(build)
         return self
     }
+    
+    public func onPortBuilt(_ block: @escaping ((BPPort) -> Void)) -> Self {
+        self.peripheralManager.portBuiltCallback = block
+        return self
+    }
 }
