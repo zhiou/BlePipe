@@ -14,14 +14,14 @@ class PeripheralManagerViewController: UIViewController {
     
     @IBOutlet weak var logView: UITextView!
     
-    private var ports:[BPPort] = []
+    private var ports:[BPPeripheralPort] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         BP.peripheralManager
             .onPortBuilt({ port in
                 self.ports.append(port)
-                port.onWrite { data, error in
+                port.recv { data, error in
                     if let error = error {
                         print(error)
                     } else if let data = data{
@@ -30,8 +30,8 @@ class PeripheralManagerViewController: UIViewController {
                         DispatchQueue.main.async {
                             self.logView.text = self.log
                         }
-                        try? port.notify(data: data)
-                        try? port.notify(data: "EOD".data(using: .utf8)!)
+                        port.send(data: data)
+                        port.send(data: "EOD".data(using: .utf8)!)
                     }
                 }
             })
@@ -43,7 +43,8 @@ class PeripheralManagerViewController: UIViewController {
                             .properties([ .read, .notify, .writeWithoutResponse, .write ])
                             .permissions ([ .readable, .writeable ])
                     }
-            }.advertise([CBAdvertisementDataLocalNameKey: "BPDemo"])
+            }
+            .advertise([CBAdvertisementDataLocalNameKey: "BPDemo"])
     }
     
     @IBAction func sendData(_ sender: Any) {
@@ -55,8 +56,8 @@ class PeripheralManagerViewController: UIViewController {
             let numberOfBytesToSend: Int = Int(arc4random() % 0x800)
             let data = Data.dataWithNumberOfBytes(numberOfBytesToSend)
             let endMark = "EOD".data(using: .utf8)!
-            try? port.notify(data: data)
-            try? port.notify(data: endMark)
+            port.send(data: data)
+            port.send(data: endMark)
             log.append(contentsOf: "send \(data.count)B, hash(\(data.md5))\n")
             logView.text = log
         }

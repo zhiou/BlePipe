@@ -8,7 +8,7 @@
 
 - [ ] 修改Peripheral端接口设计, 与Central端保持一致, 尤其是port的获取和存储方式
 
-- [ ] 抽取port和pipeEnd公用代码,形成统一的处理逻辑
+- [x] 抽取port和pipeEnd公用代码,形成统一的处理逻辑
 
 - [ ] 修复内存泄漏等问题
 

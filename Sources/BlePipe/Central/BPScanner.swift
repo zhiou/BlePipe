@@ -9,8 +9,6 @@ public class BPScanner {
     
     private let delegateProxy: BPCentralManagerDelegateProxy = BPCentralManagerDelegateProxy()
     
-    private var configuration: BPConfiguration?
-    
     private var timer: Timer?
     
     private var task: (() -> Void)?
@@ -72,12 +70,8 @@ public class BPScanner {
             return
         }
         
-        var options: [String: Any]? = nil
-        if let allowDuplicates = configuration?.allowDuplicates {
-            options = [CBCentralManagerScanOptionAllowDuplicatesKey: allowDuplicates]
-        }
         willStart?()
-        cm.scanForPeripherals(withServices: configuration?.serviceUUIDs, options: options)
+        cm.scanForPeripherals(withServices: nil, options: nil)
         if duration > 0 {
             timer = Timer.scheduledTimer(withTimeInterval: duration, repeats: false, block: { [weak self] timer in
                 self?.endScan(.timeout)

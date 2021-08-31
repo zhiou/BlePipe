@@ -52,7 +52,7 @@ extension BP.PMBuilder {
         return self
     }
     
-    public func onPortBuilt(_ block: @escaping ((BPPort) -> Void)) -> Self {
+    public func onPortBuilt(_ block: @escaping ((BPPeripheralPort) -> Void)) -> Self {
         self.peripheralManager.portBuiltCallback = block
         return self
     }
@@ -69,6 +69,7 @@ extension BP.CMBuilder {
         return self
     }
     
+    @discardableResult
     public func build(_ identifier: UUID, completion: @escaping BPConnectCompletion) -> Self {
         self.centralManager.connect(identifier, completion: completion)
         return self

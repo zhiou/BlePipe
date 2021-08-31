@@ -7,7 +7,7 @@
 
 import CoreBluetooth
 
-public typealias BPPipeEndClosure = (BPPipeEnd?, BPError?) -> Void
+public typealias BPPipeEndClosure = (BPCentralPort?, BPError?) -> Void
 public typealias BPBuildPipeCompletion = (BPError?) -> Void
 public typealias BPWriteCompletion = (BPError?) ->  Void
 
@@ -17,7 +17,7 @@ public class BPRemotePeripheral {
     
     private let delegateProxy: BPPeripheralDelegateProxy = BPPeripheralDelegateProxy()
     
-    private var pipes: [CBUUID: BPPipeEnd] = [:]
+    private var pipes: [CBUUID: BPCentralPort] = [:]
     
     private lazy var writeQueue: DispatchQueue = DispatchQueue(label: "com.bp.write.queue")
     
@@ -48,7 +48,7 @@ public class BPRemotePeripheral {
             guard let characteristics = characteristics else { return }
             for c in characteristics {
                 guard ports.contains(c.uuid) else { continue }
-                let pipeEnd = BPPipeEnd(c, remote:self)
+                let pipeEnd = BPCentralPort(c, remote:self)
                 self?.pipes[c.uuid] = pipeEnd
             }
         }
@@ -120,7 +120,7 @@ extension BPRemotePeripheral: Equatable {
 }
 
 extension BPRemotePeripheral {
-    public subscript(_ uuid: String) -> BPPipeEnd? {
+    public subscript(_ uuid: String) -> BPCentralPort? {
         let cbuuid = CBUUID(string: uuid)
         return pipes[cbuuid]
     }

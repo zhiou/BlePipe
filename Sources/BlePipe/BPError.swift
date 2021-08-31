@@ -17,4 +17,6 @@ public enum BPError: Error {
     case noPipeEnd
     case unkownDevice
     case invalidPort
+    case notImpl
+    case sendFailed
 }

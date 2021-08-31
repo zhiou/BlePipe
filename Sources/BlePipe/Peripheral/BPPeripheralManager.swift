@@ -74,12 +74,14 @@ public class BPPeripheralManager {
     
     private lazy var pm = CBPeripheralManager(delegate: peripheralManagerDelegateProxy, queue: DispatchQueue.init(label: "com.bp.pm.queue"))
     
-    var ports: [BPPort] = [] // central.identifier : [port]
+    public var ports: [BPPeripheralPort] = [] // central.identifier : [port]
     private var advertisementData: [String: Any]? = nil
     private var services: [CBMutableService] = []
-    var portBuiltCallback: ((BPPort) -> Void)? = nil
+    var portBuiltCallback: ((BPPeripheralPort) -> Void)? = nil
     
     private let sem = DispatchSemaphore(value: 1)
+    
+    private var frameDidReceive: [UUID: BPDataReceivedClosure] = [:]
     
     deinit {
         print("pm deinit")
@@ -94,7 +96,7 @@ public class BPPeripheralManager {
         }
         
         peripheralManagerDelegateProxy.onWrite = { [unowned self] central, characteristic, data in
-            var port = BPPort(characteristic, remote: central, pm: self)
+            var port = BPPeripheralPort(characteristic, remote: central, pm: self)
             if !self.ports.contains(port) {
                 self.ports.append(port)
                 portBuiltCallback?(port)
@@ -103,11 +105,11 @@ public class BPPeripheralManager {
                     port = self.ports[index]
                 }
             }
-            port.onFrameReceived?(data)
+            frameDidReceive[central.identifier]?(data, nil)
         }
         
         peripheralManagerDelegateProxy.didSubscribeClosure = { central, characteristic in
-            let port = BPPort(characteristic, remote: central, pm: self)
+            let port = BPPeripheralPort(characteristic, remote: central, pm: self)
             if !self.ports.contains(port) {
                 self.ports.append(port)
                 self.portBuiltCallback?(port)
@@ -115,7 +117,7 @@ public class BPPeripheralManager {
         }
         
         peripheralManagerDelegateProxy.didUnsubscribeClosure = { central, characteristic in
-            let port = BPPort(characteristic, remote: central, pm: self)
+            let port = BPPeripheralPort(characteristic, remote: central, pm: self)
             if self.ports.contains(port) {
                 if let index = self.ports.firstIndex(of: port) {
                     self.ports.remove(at: index)
@@ -155,6 +157,12 @@ public class BPPeripheralManager {
         } else {
             self.advertisementData = advertisementData
         }
+    }
+    
+    @discardableResult
+    public func frameReceived(from central: CBCentral, _ closure: @escaping BPDataReceivedClosure) -> Self {
+        frameDidReceive[central.identifier] = closure
+        return self
     }
 
     public func notify(_ characteristic: CBMutableCharacteristic, remote: CBCentral, data: Data) -> Bool {

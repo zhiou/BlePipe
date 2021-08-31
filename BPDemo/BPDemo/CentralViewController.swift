@@ -15,19 +15,18 @@ class TransmitViewController: UIViewController {
     private var log: String = ""
     var discovery: BPDiscovery? = nil
     var peripherals: [BPRemotePeripheral] = []
-    var cm: BP.CMBuilder? = nil
     
     let endUUID = "477A2967-1FAB-4DC5-920A-DEE5DE685A3D"
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        cm = BP.centralManager
+        BP.centralManager
             .service([])
             .port(endUUID)
             .build(discovery!.remote.identifier) { result in
                 let _ = result.map { [unowned self] rp in
                     self.peripherals.append(rp)
                     if let end = rp[endUUID] {
-                        end.subscribe { data, error in
+                        end.recv { data, error in
                             if let error = error {
                                 print(error)
                                 return
@@ -52,8 +51,8 @@ class TransmitViewController: UIViewController {
             let data = Data.dataWithNumberOfBytes(numberOfBytesToSend)
             let endMark = "EOD".data(using: .utf8)!
             if let end = rp[endUUID] {
-                try? end.write(data: data)
-                try? end.write(data: endMark)
+                end.send(data: data)
+                end.send(data: endMark)
             }
             log.append(contentsOf: "send \(data.count)B, hash(\(data.md5))\n")
             logView.text = log
