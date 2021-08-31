@@ -44,14 +44,11 @@ extension BluePipeWrapper where Base: CBPeripheral {
 }
 
 
-
-
-
 private var peripheralDiscovererKey: Void?
 
 extension BluePipeWrapper where Base: CBPeripheral {
     var discoverer: CBCentralManager? {
-        get { return objc_getAssociatedObject(base, &peripheralDiscovererKey) as? CBCentralManager }
+        get { objc_getAssociatedObject(base, &peripheralDiscovererKey) as? CBCentralManager }
         set { objc_setAssociatedObject(base, &peripheralDiscovererKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 }

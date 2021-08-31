@@ -143,15 +143,18 @@ public class BPPeripheralManager {
         build(builder)
         let service = CBMutableService(type: CBUUID(string: builder.uuidString), primary: builder.primary)
         service.characteristics = builder.characteristics
-        if self.pm.isAdvertising {
-//            pm.stopAdvertising()
-        }
+
         services.append(service)
         return self
     }
     
     public func advertise(advertisementData: [String: Any]?) {
-        self.advertisementData = advertisementData
+        if self.pm.isAdvertising {
+            pm.stopAdvertising()
+            pm.startAdvertising(advertisementData)
+        } else {
+            self.advertisementData = advertisementData
+        }
     }
 
     public func notify(_ characteristic: CBMutableCharacteristic, remote: CBCentral, data: Data) -> Bool {
