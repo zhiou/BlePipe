@@ -7,7 +7,7 @@
 
 import CoreBluetooth
 
-public typealias BPConnectCompletion = (BPRemotePeripheral?, BPError?) -> Void
+public typealias BPConnectCompletion = (Result<BPRemotePeripheral, BPError>) -> Void
 
 
 public class BPConnection {

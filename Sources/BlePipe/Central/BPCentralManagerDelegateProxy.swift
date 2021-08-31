@@ -27,7 +27,6 @@ class BPCentralManagerDelegateProxy: NSObject, CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        peripheral.bp.discoverer = central
         let discovery = BPDiscovery(remote: peripheral, advertisementData: advertisementData, rssi: RSSI.intValue)
         if let filter = filterClosure, !filter(discovery) {
             return

@@ -18,7 +18,7 @@ class PeripheralManagerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        BP.peripheralManager()
+        BP.peripheralManager
             .onPortBuilt({ port in
                 self.ports.append(port)
                 port.onWrite { data, error in

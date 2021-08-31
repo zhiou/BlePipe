@@ -40,7 +40,7 @@ class BPPeripheralManagerDelegateProxy: NSObject, CBPeripheralManagerDelegate {
         print("requests count = \(requests.count)")
     
         requests.forEach { request in
-            print("request data \(request.value)")
+            print("request data \(String(describing: request.value))")
             onWrite?(request.central, request.characteristic, request.value)
         }
         

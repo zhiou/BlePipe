@@ -56,7 +56,7 @@ extension BluePipeWrapper where Base: CBCentralManager {
     
     public func scan(_ scanBlock: @escaping BPScanBlock, completionHandler: BPScanCompletionHandler? = nil) {
         var mutatingSelf = self
-        let scanner = BPScanner(centralManager: base)
+        let scanner = BP.centralManager.scanner
         scanner.discoverClosure = { discovery in
             scanBlock(discovery)
             if let count = mutatingSelf.count {

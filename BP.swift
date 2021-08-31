@@ -5,16 +5,16 @@
 //  Created by zhiou on 2021/8/26.
 //
 
-import Foundation
+import CoreBluetooth
 
 public enum BP {
-    public static func peripheralManager() -> BP.Builder {
-        return Builder()
-    }
+    public static let peripheralManager = PMBuilder()
+    
+    public static let centralManager = CMBuilder()
 }
 
 extension BP {
-    public class Builder {
+    public class PMBuilder {
         let peripheralManager: BPPeripheralManager
         
         init() {
@@ -25,9 +25,23 @@ extension BP {
             print("builder deinit")
         }
     }
+    
+    public class CMBuilder {
+        let centralManager: BPCentralManager
+        let scanner: BPScanner
+        
+        init() {
+            self.centralManager = BPCentralManager()
+            self.scanner = BPScanner(centralManager: self.centralManager.cm)
+        }
+        
+        deinit {
+            print("builder deinit")
+        }
+    }
 }
 
-extension BP.Builder {
+extension BP.PMBuilder {
     public func advertise(_ advertisementData: [String: Any]?) {
         self.peripheralManager.advertise(advertisementData: advertisementData)
     }
@@ -40,6 +54,23 @@ extension BP.Builder {
     
     public func onPortBuilt(_ block: @escaping ((BPPort) -> Void)) -> Self {
         self.peripheralManager.portBuiltCallback = block
+        return self
+    }
+}
+
+extension BP.CMBuilder {
+    public func service(_ uuidStrings: [String]) -> Self {
+        self.centralManager.service(uuidStrings)
+        return self
+    }
+    
+    public func port(_ uuidString: String) -> Self {
+        self.centralManager.port(uuidString)
+        return self
+    }
+    
+    public func build(_ identifier: UUID, completion: @escaping BPConnectCompletion) -> Self {
+        self.centralManager.connect(identifier, completion: completion)
         return self
     }
 }

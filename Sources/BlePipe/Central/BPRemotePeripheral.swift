@@ -14,13 +14,13 @@ public typealias BPWriteCompletion = (BPError?) ->  Void
 
 public class BPRemotePeripheral {
     private let peripheral: CBPeripheral
-    private let configuration: BPConfiguration?
     
     private let delegateProxy: BPPeripheralDelegateProxy = BPPeripheralDelegateProxy()
     
     private var pipes: [CBUUID: BPPipeEnd] = [:]
     
     private lazy var writeQueue: DispatchQueue = DispatchQueue(label: "com.bp.write.queue")
+    
     
     public var maxFrameSize: Int {
         if #available(iOS 9.0, *) {
@@ -30,17 +30,12 @@ public class BPRemotePeripheral {
         }
     }
     
-    public init(peripheral: CBPeripheral, configuration: BPConfiguration) {
-        self.peripheral = peripheral
-        self.configuration = configuration
-    }
-    
     public init(peripheral: CBPeripheral) {
         self.peripheral = peripheral
-        self.configuration = nil
     }
+
     
-    public func buildPipes(_ completion: @escaping BPBuildPipeCompletion) {
+    public func buildPipes(service: [CBUUID], ports: [CBUUID], completion: @escaping BPBuildPipeCompletion) {
         self.peripheral.delegate = delegateProxy
         delegateProxy.discovereCharacteristicCompletion = {
             completion(nil)
@@ -52,12 +47,12 @@ public class BPRemotePeripheral {
             }
             guard let characteristics = characteristics else { return }
             for c in characteristics {
-                guard let uuids = self?.configuration?.pipeEndUUIDs, uuids.contains(c.uuid) else { continue }
+                guard ports.contains(c.uuid) else { continue }
                 let pipeEnd = BPPipeEnd(c, remote:self)
                 self?.pipes[c.uuid] = pipeEnd
             }
         }
-        peripheral.discoverServices(configuration?.serviceUUIDs)
+        peripheral.discoverServices(service)
     }
     
     func read(for characteristic: CBCharacteristic, closure: @escaping BPDataReceivedClosure) {
