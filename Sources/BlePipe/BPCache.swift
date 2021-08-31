@@ -7,7 +7,20 @@
 
 import Foundation
 
-class BPCache {
+public protocol BPPacketProcessor {
+    func check(buffer: Data, frame: Data) -> Data?
+}
+
+extension BPPacketProcessor {
+    func check(buffer: Data, frame: Data) ->  Data? {
+        if frame == "EOD".data(using: .utf8) {
+            return buffer
+        }
+        return nil
+    }
+}
+
+class BPCache: BPPacketProcessor {
     private var buffer: Data
     
     init() {
@@ -19,18 +32,12 @@ class BPCache {
     }
     
     func process(_ frame: Data) -> Data? {
-//        print("frame size \(frame)")
-        let finished = check(buffer: buffer, frame: frame)
-        if finished {
-            let packet = buffer;
+        if let packet = check(buffer: buffer, frame: frame) {
             buffer = Data()
             return packet
         }
         buffer.append(contentsOf: frame)
         return nil
     }
-    
-    private func check(buffer: Data, frame: Data) -> Bool {
-        return frame == "EOD".data(using: .utf8)
-    }
+
 }
