@@ -10,7 +10,9 @@ import CoreBluetooth
 
 public class BPCentralManager {
     
-    lazy var cm = CBCentralManager(delegate: delegateProxy, queue: nil)
+    private let queue = DispatchQueue(label: "com.bp.cm.queue")
+    
+    lazy var cm = CBCentralManager(delegate: delegateProxy, queue: queue)
     
     private let delegateProxy = BPCentralManagerDelegateProxy()
     

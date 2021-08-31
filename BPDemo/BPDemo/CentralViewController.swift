@@ -9,6 +9,15 @@ import BlePipe
 import UIKit
 import CommonCrypto
 
+extension BPPacketProcessor {
+    func check(buffer: Data, frame: Data) -> Data? {
+        if frame == "EOD".data(using: .utf8) {
+            return buffer
+        }
+        return nil
+    }
+}
+
 class TransmitViewController: UIViewController {
     @IBOutlet weak var logView: UITextView!
     

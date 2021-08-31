@@ -14,6 +14,8 @@ public class BPPort {
     
     private let cache: BPCache = BPCache()
     
+    private let queue = DispatchQueue(label: "com.bp.port.queue")
+    
     func maxFrameSize() -> Int {
         return 20
     }
@@ -34,7 +36,9 @@ public class BPPort {
                 return
             }
             if let frame = frame, let packet = self?.cache.process(frame) {
-                dataClosure(packet, nil)
+                self?.queue.async {
+                    dataClosure(packet, nil)
+                }
             }
         }
     }

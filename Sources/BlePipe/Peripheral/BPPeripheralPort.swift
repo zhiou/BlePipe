@@ -13,8 +13,6 @@ public class BPPeripheralPort: BPPort {
     private let remote: CBCentral
     private weak var pm: BPPeripheralManager?
     
-    private let queue = DispatchQueue(label: "com.bp.port.queue")
-    
     private var packageReceivedClosure: ((Data?, BPError?) -> Void)? = nil
     
     init(_ characteristic: CBCharacteristic, remote: CBCentral, pm: BPPeripheralManager?) {
