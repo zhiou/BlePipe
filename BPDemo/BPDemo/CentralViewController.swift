@@ -35,14 +35,12 @@ class TransmitViewController: UIViewController {
                 let _ = result.map { [unowned self] rp in
                     self.peripherals.append(rp)
                     if let end = rp[endUUID] {
-                        end.recv { data, error in
-                            if let error = error {
-                                print(error)
-                                return
-                            }
-                            if let data = data {
+                        end.recv { result in
+                            if let data = try? result.get() {
                                 self.log.append("recv \(data.count)B, hash(\(data.md5))\n")
-                                self.logView.text = log
+                                DispatchQueue.main.async {
+                                    self.logView.text = self.log
+                                }
                             }
                         }
                     }
@@ -60,8 +58,8 @@ class TransmitViewController: UIViewController {
             let data = Data.dataWithNumberOfBytes(numberOfBytesToSend)
             let endMark = "EOD".data(using: .utf8)!
             if let end = rp[endUUID] {
-                end.send(data: data)
-                end.send(data: endMark)
+                end.send(data)
+                end.send(endMark)
             }
             log.append(contentsOf: "send \(data.count)B, hash(\(data.md5))\n")
             logView.text = log

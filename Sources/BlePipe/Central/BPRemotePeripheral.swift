@@ -21,6 +21,7 @@ public class BPRemotePeripheral {
     
     private lazy var writeQueue: DispatchQueue = DispatchQueue(label: "com.bp.write.queue")
     
+    private let sem =  DispatchSemaphore(value: 0)
     
     public var maxFrameSize: Int {
         if #available(iOS 9.0, *) {
@@ -32,6 +33,10 @@ public class BPRemotePeripheral {
     
     public init(peripheral: CBPeripheral) {
         self.peripheral = peripheral
+        
+        delegateProxy.readyForWriteClosure = { [weak self] in
+            self?.sem.signal()
+        }
     }
 
     
@@ -72,19 +77,21 @@ public class BPRemotePeripheral {
         
         if characteristic.properties.contains(.writeWithoutResponse) {
             /// It won't work if system version is lower than iOS  11.0
-            delegateProxy.readyForWriteClosure = {
-                completion(nil)
-            }
-            
-            peripheral.writeValue(data, for: characteristic, type: .withoutResponse)
-            
-            /// Sleeping at most 8ms every frame can prevent sending task from fail.
             guard #available(iOS 11.0, *) else {
+                /// Sleeping at most 8ms every frame can prevent sending task from fail.
+                peripheral.writeValue(data, for: characteristic, type: .withoutResponse)
                 writeQueue.async {
                     usleep(useconds_t(data.count * 400))
                     completion(nil)
                 }
                 return
+            }
+            if !peripheral.canSendWriteWithoutResponse {
+                self.sem.wait()
+            }
+            peripheral.writeValue(data, for: characteristic, type: .withoutResponse)
+            writeQueue.async {
+                completion(nil)
             }
         } else {
             delegateProxy.writeConfirmClosures[characteristic.uuid] = { error in

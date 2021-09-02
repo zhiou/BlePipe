@@ -21,17 +21,15 @@ class PeripheralManagerViewController: UIViewController {
         BP.peripheralManager
             .onPortBuilt({ port in
                 self.ports.append(port)
-                port.recv { data, error in
-                    if let error = error {
-                        print(error)
-                    } else if let data = data{
+                port.recv { result in
+                    if let data = try? result.get() {
                         print("to be notify \(data)")
                         self.log.append(contentsOf: "recv \(data.count)B, hash(\(data.md5))\n")
                         DispatchQueue.main.async {
                             self.logView.text = self.log
                         }
-                        port.send(data: data)
-                        port.send(data: "EOD".data(using: .utf8)!)
+                        port.send(data)
+                        port.send("EOD".data(using: .utf8)!)
                     }
                 }
             })
@@ -56,8 +54,8 @@ class PeripheralManagerViewController: UIViewController {
             let numberOfBytesToSend: Int = Int(arc4random() % 0x800)
             let data = Data.dataWithNumberOfBytes(numberOfBytesToSend)
             let endMark = "EOD".data(using: .utf8)!
-            port.send(data: data)
-            port.send(data: endMark)
+            port.send(data)
+            port.send(endMark)
             log.append(contentsOf: "send \(data.count)B, hash(\(data.md5))\n")
             logView.text = log
         }

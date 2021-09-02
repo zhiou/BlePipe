@@ -109,7 +109,7 @@ public class BPCentralManager {
             return
         }
         guard c.peripheral.state != .connected else {
-            completion(Result.success(BPRemotePeripheral(peripheral: c.peripheral)))
+            onConnected(c.peripheral, completion: completion)
             return
         }
         

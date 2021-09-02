@@ -20,7 +20,7 @@ public class BPPort {
         return 20
     }
     
-    public func send(data: Data) {
+    public func send(_ data: Data) {
         let packet = BPPacket(data: data, frameSize: self.maxFrameSize())
         packets.append(packet)
         if packets.count > 0 {
@@ -28,16 +28,16 @@ public class BPPort {
         }
     }
     
-    public func recv(dataClosure: @escaping BPPacketReceivedClosure) {
+    public func recv(_ packetReceivedClosure: @escaping BPPacketReceivedClosure) {
         cache.clear()
-        try? self.onFrame { [weak self] frame, error in
+        try? self.receiving { [weak self] frame, error in
             if let error = error {
-                dataClosure(nil, error)
+                packetReceivedClosure(Result.failure(.sysError(error)))
                 return
             }
             if let frame = frame, let packet = self?.cache.process(frame) {
                 self?.queue.async {
-                    dataClosure(packet, nil)
+                    packetReceivedClosure(Result.success(packet))
                 }
             }
         }
@@ -69,7 +69,7 @@ public class BPPort {
         throw BPError.notImpl
     }
     
-    func onFrame(_ receiving: @escaping BPDataReceivedClosure) throws {
+    func receiving(_ receiving: @escaping BPDataReceivedClosure) throws {
         throw BPError.notImpl
     }
 }

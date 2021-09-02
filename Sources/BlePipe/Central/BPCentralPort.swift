@@ -7,7 +7,7 @@
 
 import CoreBluetooth
 
-public typealias BPPacketReceivedClosure = (Data?, Error?) -> Void
+public typealias BPPacketReceivedClosure = (Result<Data, BPError>) -> Void
 
 public class BPCentralPort: BPPort {
     private let characteristic: CBCharacteristic
@@ -37,7 +37,7 @@ public class BPCentralPort: BPPort {
         try remote.write(data: data, for: characteristic, completion: completion)
     }
     
-    override func onFrame(_ receiving: @escaping BPDataReceivedClosure) throws {
+    override func receiving(_ receiving: @escaping BPDataReceivedClosure) throws {
         guard characteristic.properties.contains(.notify) else {
             return
         }

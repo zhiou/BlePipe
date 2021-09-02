@@ -29,7 +29,7 @@ public class BPPeripheralPort: BPPort {
         }
     }
     
-    override func onFrame(_ receiving: @escaping BPDataReceivedClosure) throws {
+    override func receiving(_ receiving: @escaping BPDataReceivedClosure) throws {
         guard characteristic.properties.contains(.notify) else {
             return
         }
